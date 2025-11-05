@@ -303,6 +303,80 @@
   margin-bottom: 1.5rem;
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .investments-page {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .page-header p {
+    font-size: 1rem;
+  }
+
+  .plans-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .plan-card {
+    padding: 1.5rem;
+  }
+
+  .plan-roi {
+    font-size: 2.5rem;
+  }
+
+  .plan-range {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .investments-page {
+    padding: 0.75rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .plan-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .plan-roi {
+    font-size: 2rem;
+  }
+
+  .btn-invest {
+    padding: 0.875rem;
+    font-size: 0.9rem;
+  }
+}
+
 .summary-row {
   display: flex;
   justify-content: space-between;

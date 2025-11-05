@@ -169,10 +169,53 @@
   }
 
   .page-header h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+  }
+
+  .page-header p {
+    font-size: 1rem;
   }
 
   .traders-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .trader-card {
+    padding: 1.5rem;
+  }
+
+  .trader-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .copy-trading-container {
+    padding: 0.75rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .trader-avatar {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .trader-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .trader-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .follow-button {
+    padding: 0.875rem;
+    font-size: 0.9rem;
   }
 }

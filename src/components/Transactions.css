@@ -231,16 +231,74 @@
     padding: 1rem;
   }
 
+  .transactions-header h1 {
+    font-size: 1.75rem;
+  }
+
   .filter-section {
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
   .filter-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.625rem 1rem;
     font-size: 0.875rem;
   }
 
+  .transactions-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .transactions-table {
-    min-width: 800px;
+    min-width: 600px;
+    font-size: 0.875rem;
+  }
+
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .status-badge {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .transactions-page {
+    padding: 0.75rem;
+  }
+
+  .transactions-container {
+    padding: 0.75rem;
+  }
+
+  .transactions-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filter-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .transactions-table {
+    font-size: 0.8rem;
+    min-width: 500px;
+  }
+
+  .amount {
+    font-size: 1rem;
+  }
+
+  .date {
+    font-size: 0.875rem;
   }
 }

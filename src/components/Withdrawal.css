@@ -228,6 +228,10 @@
     padding: 1rem;
   }
 
+  .withdrawal-card {
+    padding: 1.5rem;
+  }
+
   .balance-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -236,5 +240,45 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .quick-amount-btn {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .withdrawal-page {
+    padding: 0.75rem;
+  }
+
+  .withdrawal-card {
+    padding: 1rem;
+  }
+
+  .form-section h3 {
+    font-size: 1rem;
+  }
+
+  .balance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .crypto-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .network-grid {
+    flex-direction: column;
+  }
+
+  .network-option {
+    width: 100%;
+  }
+
+  .withdraw-btn {
+    padding: 1rem;
+    font-size: 1rem;
   }
 }

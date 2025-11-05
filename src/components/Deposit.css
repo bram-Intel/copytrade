@@ -265,6 +265,10 @@
     padding: 1rem;
   }
 
+  .deposit-card {
+    padding: 1.5rem;
+  }
+
   .crypto-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -275,5 +279,46 @@
 
   .copy-btn {
     width: 100%;
+  }
+
+  .network-grid {
+    gap: 0.75rem;
+  }
+
+  .network-option {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .deposit-page {
+    padding: 0.75rem;
+  }
+
+  .deposit-card {
+    padding: 1rem;
+  }
+
+  .form-section h3 {
+    font-size: 1rem;
+  }
+
+  .crypto-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .crypto-option {
+    padding: 0.875rem;
+  }
+
+  .amount-input-group input {
+    padding: 0.875rem;
+    font-size: 1rem;
+  }
+
+  .confirm-btn {
+    padding: 1rem;
+    font-size: 1rem;
   }
 }
