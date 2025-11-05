@@ -1,0 +1,240 @@
+.withdrawal-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 2rem;
+}
+
+.withdrawal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.withdrawal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.balance-overview {
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.balance-overview h3 {
+  color: white;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.balance-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+}
+
+.balance-item .asset-symbol {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+}
+
+.balance-item .asset-amount {
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.crypto-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.available-amount {
+  font-size: 0.75rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.network-fee {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #fef3c7;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.address-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: monospace;
+  transition: border-color 0.2s;
+}
+
+.address-input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.amount-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.max-btn {
+  padding: 0.5rem 1.5rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.max-btn:hover {
+  background: #4f46e5;
+}
+
+.available-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.withdrawal-summary {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.summary-row.total {
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  border-top: 2px solid #e5e7eb;
+  font-size: 1.1rem;
+}
+
+.receive-amount {
+  color: #10b981;
+  font-size: 1.2rem;
+}
+
+.withdraw-btn {
+  width: 100%;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.withdraw-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.withdrawal-info {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.withdrawal-info h3 {
+  font-size: 1.25rem;
+  color: #1f2937;
+  margin: 0 0 1.5rem 0;
+  font-weight: 700;
+}
+
+.info-section {
+  margin-bottom: 1.5rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.info-section h4 {
+  font-size: 1rem;
+  color: #1f2937;
+  margin: 0 0 0.75rem 0;
+  font-weight: 600;
+}
+
+.info-section p {
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-section ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.info-section li {
+  color: #6b7280;
+  line-height: 1.8;
+}
+
+@media (max-width: 992px) {
+  .withdrawal-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .withdrawal-page {
+    padding: 1rem;
+  }
+
+  .balance-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .amount-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

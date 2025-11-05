@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.no-bg {
+  background: rgb(20, 43, 78);
+}
+
+.no-bg nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 1200px) {
+  .no-bg nav {
+    justify-content: end;
+  }
+}
+
+.no-bg nav .logo {
+  padding-top: 3.8125rem;
+}
+
+@media (max-width: 1200px) {
+  .no-bg nav .logo {
+    display: none;
+  }
+}
+
+.no-bg nav .right {
+  padding-top: 3.8125rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-bg nav .right img {
+  width: 40px;
+}
+
+.no-bg nav .right p {
+  color: white;
+  font-family: "Anton", sans-serif;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.no-bg nav .right p span {
+  font-size: 12px;
+  font-size: 0.5rem;
+}
+
+.no-bg .logo-re {
+  display: flex !important;
+  justify-content: center;
+  margin-top: 54px;
+}
+
+@media (min-width: 1200px) {
+  .no-bg .logo-re {
+    display: none !important;
+  }
+}
+
+.no-bg .section3 {
+  height: 793px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section3 {
+    flex-direction: column;
+  }
+}
+
+.no-bg .section3 .left img {
+  width: 350px;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section3 .left img {
+    margin-top: 50px;
+    width: 300px;
+  }
+}
+
+.no-bg .section3 .right {
+  width: 60%;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section3 .right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.no-bg .section3 .right h2 {
+  font-size: 4.5rem;
+  line-height: 4.5rem;
+  text-align: left;
+  color: white;
+  font-family: "Anton", sans-serif;
+  font-weight: bold;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section3 .right h2 {
+    text-align: center;
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .no-bg .section3 .right h2 {
+    text-align: center;
+    font-size: 2.5rem;
+  }
+}
+
+.no-bg .section3 .right p {
+  text-align: left;
+  color: white;
+  font-family: "Anton", sans-serif;
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section3 .right p {
+    text-align: center;
+  }
+}
+
+.claim-button {
+  font-family: "Anton", sans-serif;
+  padding: 1rem 1.1875rem;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 1.125rem;
+  line-height: 1.375rem;
+  border-radius: 3.125rem;
+  background: #ffffff none repeat scroll 0% 0%;
+  color: rgb(0, 0, 0);
+  border: medium none;
+  min-height: 4rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 357px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+}
+
+@media (max-width: 1200px) {
+  .claim-button {
+    width: 630px;
+  }
+}
+
+@media (max-width: 700px) {
+  .claim-button {
+    width: 400px;
+  }
+}
+
+@media (max-width: 500px) {
+  .claim-button {
+    width: 341px;
+  }
+}
+
+.no-bg .section2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -78px;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section2 {
+    display: flex;
+    flex-direction: column-reverse !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 41px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section2 .left {
+    padding-left: 0px;
+  }
+}
+
+@media (max-width: 600px) {
+  .no-bg .section2 .left {
+    padding-left: 0px;
+    margin-top: 25px;
+  }
+}
+
+.no-bg .section2 .left p {
+  color: white;
+  font-family: "Anton", sans-serif;
+  font-size: 15px;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section2 .left p {
+    display: flex;
+    justify-content: center !important;
+    text-align: center;
+  }
+}
+
+.no-bg .section2 .left a {
+  color: white;
+  text-decoration: none;
+  font-family: "Anton", sans-serif;
+  font-size: 15px;
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section2 .left a {
+    display: flex;
+    justify-content: center !important;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1200px) {
+  .no-bg .section2 .right {
+    padding-right: 20px;
+    margin-bottom: 30px;
+  }
+}
+
+.no-bg .section2 .right a {
+  margin-left: 15px;
+  font-family: "Anton", sans-serif;
+}
+
+@media (max-width: 600px) {
+  .no-bg .section2 .right a img {
+    width: 45px;
+  }
+}
+
+p {
+  letter-spacing: 1px;
+}

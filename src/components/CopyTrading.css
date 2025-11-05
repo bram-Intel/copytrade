@@ -1,0 +1,178 @@
+.copy-trading-container {
+  min-height: 100vh;
+  background: #0a0a0f;
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 2.5rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 0.5rem 0;
+  font-weight: 800;
+}
+
+.page-header p {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.traders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.trader-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trader-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.trader-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trader-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.trader-info h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.3rem;
+}
+
+.trader-expertise {
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0.25rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+.verified-badge {
+  display: inline-block;
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.trader-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.stat-value.success {
+  color: #10b981;
+}
+
+.trader-description {
+  margin-bottom: 1.5rem;
+  color: #555;
+  line-height: 1.6;
+  min-height: 60px;
+}
+
+.follow-button {
+  width: 100%;
+  padding: 0.875rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.follow-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.follow-button.following {
+  background: #10b981;
+}
+
+.follow-button.following:hover {
+  background: #059669;
+}
+
+.no-traders,
+.loading {
+  text-align: center;
+  padding: 4rem;
+  color: white;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .copy-trading-container {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .traders-grid {
+    grid-template-columns: 1fr;
+  }
+}
