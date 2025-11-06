@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './Dashboard.css'
 import { getDashboardStats, getUser, createUser, updateUser } from '../services/firebaseService'
 
 const Dashboard = () => {
   const { address, isConnected } = useAccount()
+  const { t } = useTranslation()
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -65,8 +67,8 @@ const Dashboard = () => {
     return (
       <div className="dashboard-container">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to access the dashboard</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -75,7 +77,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="dashboard-container">
-        <div className="loading">Loading dashboard...</div>
+        <div className="loading">{t('dashboard.loading')}</div>
       </div>
     )
   }
@@ -95,8 +97,8 @@ const Dashboard = () => {
     <div className="dashboard-page">
       <div className="dashboard-header">
         <div>
-          <h1>Dashboard Overview</h1>
-          <p>Welcome back! Here's your portfolio summary</p>
+          <h1>{t('dashboard.title')}</h1>
+          <p>{t('dashboard.subtitle')}</p>
         </div>
       </div>
 
@@ -105,44 +107,44 @@ const Dashboard = () => {
         <div className="stat-card primary">
           <div className="stat-header">
             <span className="stat-icon">💰</span>
-            <span className="stat-label">Total Balance</span>
+            <span className="stat-label">{t('dashboard.totalBalance')}</span>
           </div>
           <div className="stat-value">${(stats.totalBalance || 0).toLocaleString()}</div>
           <div className="stat-footer">
-            <span className="stat-period">All time</span>
+            <span className="stat-period">{t('dashboard.allTime')}</span>
           </div>
         </div>
 
         <div className="stat-card success">
           <div className="stat-header">
             <span className="stat-icon">📈</span>
-            <span className="stat-label">Total Profit</span>
+            <span className="stat-label">{t('dashboard.totalProfit')}</span>
           </div>
           <div className="stat-value">${(stats.totalProfit || 0).toLocaleString()}</div>
           <div className="stat-footer">
-            <span className="stat-period">Lifetime earnings</span>
+            <span className="stat-period">{t('dashboard.lifetimeEarnings')}</span>
           </div>
         </div>
 
         <div className="stat-card info">
           <div className="stat-header">
             <span className="stat-icon">💼</span>
-            <span className="stat-label">Invested</span>
+            <span className="stat-label">{t('dashboard.invested')}</span>
           </div>
           <div className="stat-value">${(stats.totalInvested || 0).toLocaleString()}</div>
           <div className="stat-footer">
-            <span className="stat-period">{stats.activePlans || 0} active</span>
+            <span className="stat-period">{stats.activePlans || 0} {t('dashboard.active')}</span>
           </div>
         </div>
 
         <div className="stat-card warning">
           <div className="stat-header">
             <span className="stat-icon">💵</span>
-            <span className="stat-label">Available</span>
+            <span className="stat-label">{t('dashboard.available')}</span>
           </div>
           <div className="stat-value">${(stats.availableBalance || 0).toLocaleString()}</div>
           <div className="stat-footer">
-            <span className="stat-period">Ready to invest</span>
+            <span className="stat-period">{t('dashboard.readyToInvest')}</span>
           </div>
         </div>
       </div>
@@ -151,19 +153,19 @@ const Dashboard = () => {
       <div className="quick-actions">
         <Link to="/deposit" className="action-btn primary">
           <span className="action-icon">⬇️</span>
-          <span>Deposit</span>
+          <span>{t('dashboard.makeDeposit')}</span>
         </Link>
         <Link to="/withdraw" className="action-btn secondary">
           <span className="action-icon">⬆️</span>
-          <span>Withdraw</span>
+          <span>{t('dashboard.requestWithdrawal')}</span>
         </Link>
         <Link to="/investments" className="action-btn success">
           <span className="action-icon">💎</span>
-          <span>Invest Now</span>
+          <span>{t('dashboard.viewInvestments')}</span>
         </Link>
         <Link to="/copy-trading" className="action-btn info">
           <span className="action-icon">👥</span>
-          <span>Copy Trade</span>
+          <span>{t('dashboard.exploreCopyTrading')}</span>
         </Link>
       </div>
 
@@ -171,16 +173,16 @@ const Dashboard = () => {
         {/* Portfolio Assets */}
         <div className="content-card">
           <div className="card-header">
-            <h2>Portfolio Assets</h2>
+            <h2>{t('dashboard.activePortfolio')}</h2>
           </div>
           {stats.portfolio && stats.portfolio.length > 0 ? (
             <div className="assets-table">
               <table>
                 <thead>
                   <tr>
-                    <th>Asset</th>
-                    <th>Amount</th>
-                    <th>Value</th>
+                    <th>{t('dashboard.asset')}</th>
+                    <th>{t('dashboard.amount')}</th>
+                    <th>{t('dashboard.value')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -200,8 +202,8 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="empty-state">
-              <p>No assets yet. Make a deposit to get started.</p>
-              <Link to="/deposit" className="btn-link">Deposit Now</Link>
+              <p>{t('dashboard.noAssets')}</p>
+              <Link to="/deposit" className="btn-link">{t('dashboard.makeDeposit')}</Link>
             </div>
           )}
         </div>
@@ -209,7 +211,7 @@ const Dashboard = () => {
         {/* Active Copy Trades */}
         <div className="content-card">
           <div className="card-header">
-            <h2>Active Copy Trades</h2>
+            <h2>{t('copyTrading.title')}</h2>
             <Link to="/copy-trading" className="view-all">View All →</Link>
           </div>
           {stats.activeCopyTrades > 0 ? (
@@ -228,7 +230,7 @@ const Dashboard = () => {
         {/* Recent Transactions */}
         <div className="content-card full-width">
           <div className="card-header">
-            <h2>Recent Transactions</h2>
+            <h2>{t('dashboard.recentTransactions')}</h2>
             <Link to="/transactions" className="view-all">View All →</Link>
           </div>
           {stats.recentTransactions && stats.recentTransactions.length > 0 ? (
@@ -236,10 +238,10 @@ const Dashboard = () => {
               <table>
                 <thead>
                   <tr>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Date</th>
+                    <th>{t('dashboard.type')}</th>
+                    <th>{t('dashboard.amount')}</th>
+                    <th>{t('dashboard.status')}</th>
+                    <th>{t('dashboard.date')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -264,7 +266,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="empty-state">
-              <p>No transactions yet</p>
+              <p>{t('dashboard.noTransactions')}</p>
             </div>
           )}
         </div>
