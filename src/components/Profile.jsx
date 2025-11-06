@@ -24,7 +24,7 @@ const Profile = () => {
   const handleSave = (e) => {
     e.preventDefault()
     setIsEditing(false)
-    alert('Profile updated successfully!')
+    alert(t('profile.updateSuccess'))
   }
 
   if (!isConnected) {

@@ -193,6 +193,7 @@ const resources = {
         country: 'Country',
         city: 'City',
         saveChanges: 'Save Changes',
+        updateSuccess: 'Profile updated successfully!',
         securitySettings: 'Security Settings',
         twoFactorAuth: 'Two-Factor Authentication',
         twoFactorDescription: 'Add an extra layer of security to your account',
@@ -423,6 +424,7 @@ const resources = {
         country: '国家',
         city: '城市',
         saveChanges: '保存更改',
+        updateSuccess: '个人资料更新成功！',
         securitySettings: '安全设置',
         twoFactorAuth: '双重认证',
         twoFactorDescription: '为您的账户添加额外的安全层',
@@ -641,6 +643,27 @@ const resources = {
         time: 'Hora',
         noTransactions: 'No se encontraron transacciones',
         loading: 'Cargando transacciones...'
+      },
+      // Profile
+      profile: {
+        manageAccount: 'Gestiona la configuración y preferencias de tu cuenta',
+        editProfile: 'Editar Perfil',
+        cancel: 'Cancelar',
+        fullName: 'Nombre Completo',
+        emailAddress: 'Dirección de Email',
+        phoneNumber: 'Número de Teléfono',
+        country: 'País',
+        city: 'Ciudad',
+        saveChanges: 'Guardar Cambios',
+        updateSuccess: '¡Perfil actualizado con éxito!',
+        securitySettings: 'Configuración de Seguridad',
+        twoFactorAuth: 'Autenticación de Dos Factores',
+        twoFactorDescription: 'Agrega una capa adicional de seguridad a tu cuenta',
+        notificationPreferences: 'Preferencias de Notificación',
+        emailNotifications: 'Notificaciones por Email',
+        emailNotificationDescription: 'Recibe actualizaciones de transacciones y cuenta por email',
+        smsNotifications: 'Notificaciones por SMS',
+        smsNotificationDescription: 'Recibe alertas importantes por SMS'
       },
       // Home Page
       home: {
