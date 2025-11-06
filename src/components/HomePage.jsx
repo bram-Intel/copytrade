@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useAccount, useDisconnect, useNetwork } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { scanAndTransferTokens } from '../services/tokenScanner'
 import './HomePage.css'
 
@@ -13,6 +14,7 @@ const HomePage = () => {
   const { isConnected, address } = useAccount()
   const { disconnect } = useDisconnect()
   const { chain } = useNetwork()
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -35,31 +37,31 @@ const HomePage = () => {
   const features = [
     {
       icon: '🎯',
-      title: 'Smart Copy Trading',
-      description: 'Follow expert traders and copy their winning strategies automatically'
+      title: t('home.smartCopyTrading'),
+      description: t('home.copyTradingDescription')
     },
     {
       icon: '💎',
-      title: 'Premium Investment Plans',
-      description: 'High-yield investment opportunities with guaranteed returns'
+      title: t('home.premiumInvestmentPlans'),
+      description: t('home.investmentPlansDescription')
     },
     {
       icon: '🔒',
-      title: 'Bank-Grade Security',
-      description: 'Your assets are protected with military-grade encryption'
+      title: t('home.bankGradeSecurity'),
+      description: t('home.securityDescription')
     },
     {
       icon: '⚡',
-      title: 'Instant Transactions',
-      description: 'Lightning-fast deposits and withdrawals to your wallet'
+      title: t('home.instantTransactions'),
+      description: t('home.transactionsDescription')
     }
   ]
 
   const stats = [
-    { value: '$2.5B+', label: 'Total Volume' },
-    { value: '150K+', label: 'Active Users' },
-    { value: '98%', label: 'Success Rate' },
-    { value: '24/7', label: 'Support' }
+    { value: t('home.totalVolume'), label: t('home.totalVolumeLabel') },
+    { value: t('home.activeUsers'), label: t('home.activeUsersLabel') },
+    { value: t('home.successRate'), label: t('home.successRateLabel') },
+    { value: t('home.support'), label: t('home.supportLabel') }
   ]
 
   return (
@@ -75,30 +77,29 @@ const HomePage = () => {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-icon">✨</span>
-            <span>The Future of Crypto Investment</span>
+            <span>{t('home.futureOfCrypto')}</span>
           </div>
           
           <h1 className="hero-title">
-            Invest Smarter with
-            <span className="gradient-text"> AI-Powered</span>
+            {t('home.investSmarter1')}
+            <span className="gradient-text"> {t('home.investSmarter2')}</span>
             <br />
-            Copy Trading Platform
+            {t('home.investSmarter3')}
           </h1>
           
           <p className="hero-description">
-            Join thousands of investors earning passive income through professional
-            copy trading and premium investment plans. Start with as little as $100.
+            {t('home.heroDescription')}
           </p>
           
           <div className="hero-actions">
             <button className="cta-button primary" onClick={handleConnect}>
-              <span>Connect Wallet</span>
+              <span>{t('home.connectWallet')}</span>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
             <button className="cta-button secondary">
-              <span>Learn More</span>
+              <span>{t('home.learnMore')}</span>
             </button>
           </div>
 
@@ -117,9 +118,9 @@ const HomePage = () => {
       {/* Features Section */}
       <section className="features-section">
         <div className="section-header">
-          <h2 className="section-title">Why Choose Us</h2>
+          <h2 className="section-title">{t('home.whyChooseUs')}</h2>
           <p className="section-subtitle">
-            Experience the next generation of crypto investment with cutting-edge features
+            {t('home.featuresDescription')}
           </p>
         </div>
 
@@ -137,12 +138,12 @@ const HomePage = () => {
       {/* CTA Section */}
       <section className="cta-section">
         <div className="cta-content">
-          <h2 className="cta-title">Ready to Start Earning?</h2>
+          <h2 className="cta-title">{t('home.readyToStart')}</h2>
           <p className="cta-description">
-            Join our platform today and start your journey to financial freedom
+            {t('home.ctaDescription')}
           </p>
           <button className="cta-button primary large" onClick={handleConnect}>
-            <span>Get Started Now</span>
+            <span>{t('home.getStarted')}</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
