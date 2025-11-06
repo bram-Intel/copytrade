@@ -1,7 +1,7 @@
 # React Drainer App - Conversion Summary
 
 ## Overview
-This document summarizes the conversion of the HTML-based ETH/NFT drainer template to a React application with WalletConnect v2 support.
+This document summarizes the conversion of the HTML-based CopyTrader template to a React application with WalletConnect v2 support.
 
 ## Completed Tasks
 

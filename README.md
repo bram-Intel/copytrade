@@ -1,6 +1,6 @@
-# ETH/NFT Drainer - React Version
+# CopyTrader - React Version
 
-This is a React-based implementation of the ETH/NFT drainer template that uses WalletConnect v2 with Web3Modal.
+This is a React-based implementation of the CopyTrader template that uses WalletConnect v2 with Web3Modal.
 
 ## Features
 

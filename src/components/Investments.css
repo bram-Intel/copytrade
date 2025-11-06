@@ -352,6 +352,14 @@
   .modal-actions button {
     width: 100%;
   }
+
+  .plan-card.featured {
+    transform: scale(1);
+  }
+
+  .plan-card.featured:hover {
+    transform: translateY(-8px);
+  }
 }
 
 @media (max-width: 480px) {
@@ -363,6 +371,10 @@
     font-size: 1.5rem;
   }
 
+  .page-header p {
+    font-size: 0.9rem;
+  }
+
   .plan-header h3 {
     font-size: 1.25rem;
   }
@@ -371,9 +383,31 @@
     font-size: 2rem;
   }
 
-  .btn-invest {
+  .plan-duration {
+    font-size: 0.9rem;
+  }
+
+  .range-value {
+    font-size: 1rem;
+  }
+
+  .invest-btn {
     padding: 0.875rem;
     font-size: 0.9rem;
+  }
+
+  .modal-content {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .form-group input {
+    padding: 0.65rem;
+    font-size: 0.95rem;
   }
 }
 
@@ -432,24 +466,4 @@
   margin-bottom: 0.5rem;
 }
 
-@media (max-width: 768px) {
-  .investments-page {
-    padding: 1rem;
-  }
 
-  .plans-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .plan-card.featured {
-    transform: scale(1);
-  }
-
-  .plan-card.featured:hover {
-    transform: translateY(-8px);
-  }
-
-  .modal-content {
-    padding: 1.5rem;
-  }
-}
