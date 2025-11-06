@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './CopyTrading.css'
 import { getAllCopyTraders, getUser, createCopyTrade } from '../services/firebaseService'
 
 const CopyTrading = () => {
   const { address, isConnected } = useAccount()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [traders, setTraders] = useState([])
   const [selectedTrader, setSelectedTrader] = useState(null)
   const [copyAmount, setCopyAmount] = useState('')
@@ -82,28 +84,28 @@ const CopyTrading = () => {
     return (
       <div className="copy-trading-container">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to view copy traders</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
   }
 
   if (loading) {
-    return <div className="copy-trading-container"><div className="loading">Loading traders...</div></div>
+    return <div className="copy-trading-container"><div className="loading">{t('copyTrading.loading')}</div></div>
   }
 
   return (
     <div className="copy-trading-container">
       <div className="page-header">
-        <h1>Copy Trading</h1>
-        <p>Follow expert traders and copy their trades automatically</p>
+        <h1>{t('copyTrading.title')}</h1>
+        <p>{t('copyTrading.subtitle')}</p>
       </div>
 
       <div className="traders-grid">
         {traders.length === 0 ? (
           <div className="no-traders" style={{gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.6)'}}>
-            <p>No traders available at the moment. Check back later!</p>
+            <p>{t('copyTrading.noTraders')}</p>
           </div>
         ) : (
           traders.map(trader => (
@@ -115,25 +117,25 @@ const CopyTrading = () => {
                 <div className="trader-info">
                   <h3>{trader.name}</h3>
                   <p className="trader-expertise">{trader.expertise}</p>
-                  {trader.verified && <span className="verified-badge">✓ Verified</span>}
+                  {trader.verified && <span className="verified-badge">✓ {t('copyTrading.verified')}</span>}
                 </div>
               </div>
 
               <div className="trader-stats">
                 <div className="stat">
-                  <span className="stat-label">Win Rate</span>
+                  <span className="stat-label">{t('copyTrading.winRate')}</span>
                   <span className="stat-value success">{trader.win_rate}%</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-label">Total ROI</span>
+                  <span className="stat-label">{t('copyTrading.totalROI')}</span>
                   <span className="stat-value">{trader.total_roi}%</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-label">Followers</span>
+                  <span className="stat-label">{t('copyTrading.followers')}</span>
                   <span className="stat-value">{trader.followers?.toLocaleString()}</span>
                 </div>
                 <div className="stat">
-                  <span className="stat-label">Min Amount</span>
+                  <span className="stat-label">{t('copyTrading.minAmount')}</span>
                   <span className="stat-value">${trader.min_copy_amount}</span>
                 </div>
               </div>
@@ -142,7 +144,7 @@ const CopyTrading = () => {
                 className="follow-button"
                 onClick={() => handleCopyTrader(trader)}
               >
-                Copy Trader
+                {t('copyTrading.copyNow')}
               </button>
             </div>
           ))
@@ -154,13 +156,13 @@ const CopyTrading = () => {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Copy {selectedTrader.name}</h2>
+              <h2>{t('copyTrading.startCopying')} {selectedTrader.name}</h2>
               <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
             </div>
 
             <form onSubmit={handleCopySubmit}>
               <div className="form-group">
-                <label>Copy Amount (USD)</label>
+                <label>{t('copyTrading.copyAmount')}</label>
                 <input
                   type="number"
                   value={copyAmount}
@@ -180,17 +182,17 @@ const CopyTrading = () => {
                   <strong>{selectedTrader.name}</strong>
                 </div>
                 <div className="summary-row">
-                  <span>Win Rate:</span>
+                  <span>{t('copyTrading.winRate')}:</span>
                   <strong className="success-text">{selectedTrader.win_rate}%</strong>
                 </div>
                 <div className="summary-row">
-                  <span>Copy Amount:</span>
+                  <span>{t('copyTrading.copyAmount')}:</span>
                   <strong>${parseFloat(copyAmount || 0).toLocaleString()}</strong>
                 </div>
               </div>
 
               <button type="submit" className="submit-btn">
-                Start Copy Trading
+                {t('copyTrading.confirmCopy')}
               </button>
             </form>
           </div>

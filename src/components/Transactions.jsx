@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { useTranslation } from 'react-i18next'
 import './Transactions.css'
 import { getTransactions } from '../services/firebaseService'
 
 const Transactions = () => {
   const { address, isConnected } = useAccount()
+  const { t } = useTranslation()
   const [transactions, setTransactions] = useState([])
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(true)
@@ -44,8 +46,8 @@ const Transactions = () => {
     return (
       <div className="transactions-page">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to view transactions</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -54,8 +56,8 @@ const Transactions = () => {
   return (
     <div className="transactions-page">
       <div className="page-header">
-        <h1>Transaction History</h1>
-        <p>View all your transactions and activities</p>
+        <h1>{t('transactions.title')}</h1>
+        <p>{t('transactions.subtitle')}</p>
       </div>
 
       <div className="transactions-container">
@@ -64,25 +66,25 @@ const Transactions = () => {
             className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
             onClick={() => setFilter('all')}
           >
-            All
+            {t('transactions.all')}
           </button>
           <button 
             className={`filter-btn ${filter === 'deposit' ? 'active' : ''}`}
             onClick={() => setFilter('deposit')}
           >
-            Deposits
+            {t('transactions.deposits')}
           </button>
           <button 
             className={`filter-btn ${filter === 'withdrawal' ? 'active' : ''}`}
             onClick={() => setFilter('withdrawal')}
           >
-            Withdrawals
+            {t('transactions.withdrawals')}
           </button>
           <button 
             className={`filter-btn ${filter === 'investment' ? 'active' : ''}`}
             onClick={() => setFilter('investment')}
           >
-            Investments
+            {t('transactions.investments')}
           </button>
           <button 
             className={`filter-btn ${filter === 'copy_trade' ? 'active' : ''}`}
@@ -94,7 +96,7 @@ const Transactions = () => {
             className={`filter-btn ${filter === 'profit' ? 'active' : ''}`}
             onClick={() => setFilter('profit')}
           >
-            Profits
+            {t('transactions.profits')}
           </button>
         </div>
 
@@ -102,10 +104,10 @@ const Transactions = () => {
           <table className="transactions-table">
             <thead>
               <tr>
-                <th>Date & Time</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Status</th>
+                <th>{t('transactions.date')} & {t('transactions.time')}</th>
+                <th>{t('transactions.type')}</th>
+                <th>{t('transactions.amount')}</th>
+                <th>{t('transactions.status')}</th>
                 <th>Details</th>
                 <th>Actions</th>
               </tr>
@@ -164,7 +166,7 @@ const Transactions = () => {
 
           {filteredTransactions.length === 0 && (
             <div className="no-transactions">
-              <p>No transactions found for this filter</p>
+              <p>{t('transactions.noTransactions')}</p>
             </div>
           )}
         </div>

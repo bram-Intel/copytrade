@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import './Investments.css'
 import { getAllPlans, getUser, createUserPlan } from '../services/firebaseService'
 
 const Investments = () => {
   const { address, isConnected } = useAccount()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [plans, setPlans] = useState([])
   const [selectedPlan, setSelectedPlan] = useState(null)
   const [investAmount, setInvestAmount] = useState('')
@@ -85,8 +87,8 @@ const Investments = () => {
     return (
       <div className="investments-page">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to view investment plans</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -95,15 +97,15 @@ const Investments = () => {
   return (
     <div className="investments-page">
       <div className="page-header">
-        <h1>Investment Plans</h1>
-        <p>Choose a plan that fits your investment goals</p>
+        <h1>{t('investments.title')}</h1>
+        <p>{t('investments.subtitle')}</p>
       </div>
 
       <div className="plans-grid">
         {loading ? (
-          <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.6)'}}>Loading plans...</div>
+          <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.6)'}}>{t('investments.loading')}</div>
         ) : plans.length === 0 ? (
-          <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.6)'}}>No investment plans available</div>
+          <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'rgba(255,255,255,0.6)'}}>{t('investments.noPlans')}</div>
         ) : (
           plans.map((plan, index) => (
             <div key={plan.id} className={`plan-card ${index === 2 ? 'featured' : ''}`}>
@@ -117,11 +119,11 @@ const Investments = () => {
 
               <div className="plan-range">
                 <div className="range-item">
-                  <span className="range-label">Min Investment</span>
+                  <span className="range-label">{t('investments.minInvestment')}</span>
                   <span className="range-value">${parseFloat(plan.min_price).toLocaleString()}</span>
                 </div>
                 <div className="range-item">
-                  <span className="range-label">Max Investment</span>
+                  <span className="range-label">{t('investments.maxInvestment')}</span>
                   <span className="range-value">${parseFloat(plan.max_price).toLocaleString()}</span>
                 </div>
               </div>
@@ -129,8 +131,8 @@ const Investments = () => {
               <div className="plan-features">
                 <h4>Features:</h4>
                 <ul>
-                  <li><span className="check-icon">✓</span>ROI: {plan.minr}% - {plan.maxr}%</li>
-                  <li><span className="check-icon">✓</span>Duration: {plan.expiration}</li>
+                  <li><span className="check-icon">✓</span>{t('investments.roi')}: {plan.minr}% - {plan.maxr}%</li>
+                  <li><span className="check-icon">✓</span>{t('investments.duration')}: {plan.expiration}</li>
                   <li><span className="check-icon">✓</span>Returns every {plan.increment_interval}</li>
                   <li><span className="check-icon">✓</span>Secure & Transparent</li>
                 </ul>
@@ -140,7 +142,7 @@ const Investments = () => {
                 className="invest-btn"
                 onClick={() => handleInvest(plan)}
               >
-                Invest Now
+                {t('investments.investNow')}
               </button>
             </div>
           ))
@@ -152,13 +154,13 @@ const Investments = () => {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Invest in {selectedPlan.name}</h2>
+              <h2>{t('investments.investIn')} {selectedPlan.name}</h2>
               <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
             </div>
 
             <form onSubmit={handleInvestSubmit}>
               <div className="form-group">
-                <label>Investment Amount (USD)</label>
+                <label>{t('investments.investmentAmount')}</label>
                 <input
                   type="number"
                   value={investAmount}
@@ -175,19 +177,19 @@ const Investments = () => {
 
               <div className="investment-summary">
                 <div className="summary-row">
-                  <span>Investment Amount:</span>
+                  <span>{t('investments.investmentAmount')}:</span>
                   <strong>${parseFloat(investAmount || 0).toLocaleString()}</strong>
                 </div>
                 <div className="summary-row">
-                  <span>Expected ROI:</span>
+                  <span>{t('investments.expectedROI')}:</span>
                   <strong className="success-text">{selectedPlan.minr}% - {selectedPlan.maxr}%</strong>
                 </div>
                 <div className="summary-row">
-                  <span>Duration:</span>
+                  <span>{t('investments.duration')}:</span>
                   <strong>{selectedPlan.expiration}</strong>
                 </div>
                 <div className="summary-row total">
-                  <span>Min Expected Return:</span>
+                  <span>{t('investments.minExpectedReturn')}:</span>
                   <strong className="success-text">
                     ${(parseFloat(investAmount || 0) * (1 + parseFloat(selectedPlan.minr) / 100)).toLocaleString()}
                   </strong>
@@ -195,7 +197,7 @@ const Investments = () => {
               </div>
 
               <button type="submit" className="submit-btn">
-                Confirm Investment
+                {t('investments.confirmInvestment')}
               </button>
             </form>
           </div>
