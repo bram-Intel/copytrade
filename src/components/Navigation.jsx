@@ -2,6 +2,8 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAccount, useDisconnect } from 'wagmi'
 import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { useTranslation } from 'react-i18next'
+import LanguageSwitcher from './LanguageSwitcher'
 import './Navigation.css'
 
 const Navigation = () => {
@@ -9,6 +11,7 @@ const Navigation = () => {
   const { disconnect } = useDisconnect()
   const { open } = useWeb3Modal()
   const location = useLocation()
+  const { t } = useTranslation()
 
   const isActive = (path) => location.pathname === path
 
@@ -25,48 +28,49 @@ const Navigation = () => {
               to="/dashboard" 
               className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
             >
-              Dashboard
+              {t('nav.dashboard')}
             </Link>
             <Link 
               to="/copy-trading" 
               className={`nav-link ${isActive('/copy-trading') ? 'active' : ''}`}
             >
-              Copy Trading
+              {t('nav.copyTrading')}
             </Link>
             <Link 
               to="/investments" 
               className={`nav-link ${isActive('/investments') ? 'active' : ''}`}
             >
-              Plans
+              {t('nav.investments')}
             </Link>
             <Link 
               to="/transactions" 
               className={`nav-link ${isActive('/transactions') ? 'active' : ''}`}
             >
-              Transactions
+              {t('nav.transactions')}
             </Link>
             <Link 
               to="/profile" 
               className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
             >
-              Profile
+              {t('nav.profile')}
             </Link>
           </div>
         )}
 
         <div className="nav-actions">
+          <LanguageSwitcher />
           {isConnected ? (
             <>
               <div className="wallet-display">
                 {address?.substring(0, 6)}...{address?.substring(38)}
               </div>
               <button onClick={() => disconnect()} className="disconnect-btn">
-                Disconnect
+                {t('nav.disconnect')}
               </button>
             </>
           ) : (
             <button onClick={() => open()} className="connect-nav-btn">
-              Connect Wallet
+              {t('nav.connectWallet')}
             </button>
           )}
         </div>

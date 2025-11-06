@@ -161,6 +161,10 @@
     font-size: 1.25rem;
   }
 
+  .nav-actions {
+    gap: 0.5rem;
+  }
+
   .nav-links {
     order: 3;
     flex-basis: 100%;
@@ -196,6 +200,10 @@
 
   .logo {
     font-size: 1.1rem;
+  }
+
+  .nav-actions {
+    gap: 0.375rem;
   }
 
   .nav-links {
