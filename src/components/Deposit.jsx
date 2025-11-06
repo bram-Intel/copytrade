@@ -84,7 +84,7 @@ const Deposit = () => {
     <div className="deposit-page">
       <div className="page-header">
         <h1>{t('deposit.title')}</h1>
-        <p>Add funds to your account to start investing</p>
+        <p>{t('deposit.pageSubtitle')}</p>
       </div>
 
       <div className="deposit-container">
@@ -130,7 +130,7 @@ const Deposit = () => {
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Enter amount"
+                  placeholder={t('deposit.enterAmountPlaceholder')}
                   step="0.01"
                   min="0"
                   required
@@ -154,16 +154,16 @@ const Deposit = () => {
 
             <div className="deposit-info">
               <div className="info-row">
-                <span>Minimum Deposit:</span>
+                <span>{t('deposit.minDepositLabel')}:</span>
                 <strong>10 {selectedCrypto}</strong>
               </div>
               <div className="info-row">
-                <span>Confirmations Required:</span>
-                <strong>{selectedCrypto === 'BTC' ? '3' : '12'} blocks</strong>
+                <span>{t('deposit.confirmationsRequired')}:</span>
+                <strong>{selectedCrypto === 'BTC' ? '3' : '12'} {t('deposit.blocks')}</strong>
               </div>
               <div className="info-row">
-                <span>Estimated Arrival:</span>
-                <strong>{selectedCrypto === 'BTC' ? '30-60 min' : '5-15 min'}</strong>
+                <span>{t('deposit.estimatedArrival')}:</span>
+                <strong>{selectedCrypto === 'BTC' ? t('deposit.thirtyToSixtyMin') : t('deposit.fiveToFifteenMin')}</strong>
               </div>
             </div>
 
@@ -174,19 +174,19 @@ const Deposit = () => {
         </div>
 
         <div className="deposit-help">
-          <h3>How to Deposit</h3>
+          <h3>{t('deposit.howToDeposit')}</h3>
           <ol>
-            <li>Select the cryptocurrency you want to deposit</li>
-            <li>Choose the correct network</li>
-            <li>Copy the deposit address</li>
-            <li>Send funds from your external wallet</li>
-            <li>Wait for confirmations</li>
-            <li>Funds will be credited automatically</li>
+            <li>{t('deposit.step1')}</li>
+            <li>{t('deposit.step2')}</li>
+            <li>{t('deposit.step3')}</li>
+            <li>{t('deposit.step4')}</li>
+            <li>{t('deposit.step5')}</li>
+            <li>{t('deposit.step6')}</li>
           </ol>
 
           <div className="help-note">
-            <h4>Need Help?</h4>
-            <p>If you have any questions or issues with your deposit, please contact our 24/7 support team.</p>
+            <h4>{t('deposit.needHelp')}</h4>
+            <p>{t('deposit.contactSupport')}</p>
           </div>
         </div>
       </div>

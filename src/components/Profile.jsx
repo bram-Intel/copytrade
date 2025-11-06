@@ -42,7 +42,7 @@ const Profile = () => {
     <div className="profile-page">
       <div className="page-header">
         <h1>{t('nav.profile')}</h1>
-        <p>Manage your account settings and preferences</p>
+        <p>{t('profile.manageAccount')}</p>
       </div>
 
       <div className="profile-container">
@@ -61,14 +61,14 @@ const Profile = () => {
               className="edit-btn"
               onClick={() => setIsEditing(!isEditing)}
             >
-              {isEditing ? 'Cancel' : 'Edit Profile'}
+              {isEditing ? t('profile.cancel') : t('profile.editProfile')}
             </button>
           </div>
 
           <form onSubmit={handleSave}>
             <div className="form-grid">
               <div className="form-group">
-                <label>Full Name</label>
+                <label>{t('profile.fullName')}</label>
                 <input
                   type="text"
                   value={profileData.name}
@@ -78,7 +78,7 @@ const Profile = () => {
               </div>
 
               <div className="form-group">
-                <label>Email Address</label>
+                <label>{t('profile.emailAddress')}</label>
                 <input
                   type="email"
                   value={profileData.email}
@@ -88,7 +88,7 @@ const Profile = () => {
               </div>
 
               <div className="form-group">
-                <label>Phone Number</label>
+                <label>{t('profile.phoneNumber')}</label>
                 <input
                   type="tel"
                   value={profileData.phone}
@@ -98,7 +98,7 @@ const Profile = () => {
               </div>
 
               <div className="form-group">
-                <label>Country</label>
+                <label>{t('profile.country')}</label>
                 <input
                   type="text"
                   value={profileData.country}
@@ -108,7 +108,7 @@ const Profile = () => {
               </div>
 
               <div className="form-group full-width">
-                <label>City</label>
+                <label>{t('profile.city')}</label>
                 <input
                   type="text"
                   value={profileData.city}
@@ -120,19 +120,19 @@ const Profile = () => {
 
             {isEditing && (
               <button type="submit" className="save-btn">
-                Save Changes
+                {t('profile.saveChanges')}
               </button>
             )}
           </form>
         </div>
 
         <div className="settings-card">
-          <h3>Security Settings</h3>
+          <h3>{t('profile.securitySettings')}</h3>
           
           <div className="setting-item">
             <div className="setting-info">
-              <strong>Two-Factor Authentication</strong>
-              <p>Add an extra layer of security to your account</p>
+              <strong>{t('profile.twoFactorAuth')}</strong>
+              <p>{t('profile.twoFactorDescription')}</p>
             </div>
             <label className="toggle">
               <input
@@ -144,12 +144,12 @@ const Profile = () => {
             </label>
           </div>
 
-          <h3>Notification Preferences</h3>
+          <h3>{t('profile.notificationPreferences')}</h3>
 
           <div className="setting-item">
             <div className="setting-info">
-              <strong>Email Notifications</strong>
-              <p>Receive transaction and account updates via email</p>
+              <strong>{t('profile.emailNotifications')}</strong>
+              <p>{t('profile.emailNotificationDescription')}</p>
             </div>
             <label className="toggle">
               <input
@@ -163,8 +163,8 @@ const Profile = () => {
 
           <div className="setting-item">
             <div className="setting-info">
-              <strong>SMS Notifications</strong>
-              <p>Receive important alerts via SMS</p>
+              <strong>{t('profile.smsNotifications')}</strong>
+              <p>{t('profile.smsNotificationDescription')}</p>
             </div>
             <label className="toggle">
               <input

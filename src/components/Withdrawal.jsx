@@ -113,7 +113,7 @@ const Withdrawal = () => {
     <div className="withdrawal-page">
       <div className="page-header">
         <h1>{t('withdrawal.title')}</h1>
-        <p>Withdraw your earnings to your personal wallet</p>
+        <p>{t('withdrawal.pageSubtitle')}</p>
       </div>
 
       <div className="withdrawal-container">
@@ -172,7 +172,7 @@ const Withdrawal = () => {
                 ))}
               </div>
               <div className="network-fee">
-                Network Fee: {currentCrypto?.fee} {selectedCrypto}
+                {t('withdrawal.networkFee')}: {currentCrypto?.fee} {selectedCrypto}
               </div>
             </div>
 
@@ -195,7 +195,7 @@ const Withdrawal = () => {
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0.00"
+                  placeholder={t('withdrawal.enterAmountPlaceholder')}
                   step="0.01"
                   min="0"
                   max={maxAmount}
@@ -212,22 +212,22 @@ const Withdrawal = () => {
                   {t('withdrawal.max')}
                 </button>
                 <span className="available-text">
-                  Available: {maxAmount.toLocaleString(undefined, {maximumFractionDigits: 8})} {selectedCrypto}
+                  {t('withdrawal.available')}: {maxAmount.toLocaleString(undefined, {maximumFractionDigits: 8})} {selectedCrypto}
                 </span>
               </div>
             </div>
 
             <div className="withdrawal-summary">
               <div className="summary-row">
-                <span>Amount:</span>
+                <span>{t('withdrawal.amount')}:</span>
                 <strong>{amount || '0'} {selectedCrypto}</strong>
               </div>
               <div className="summary-row">
-                <span>Network Fee:</span>
+                <span>{t('withdrawal.networkFee')}:</span>
                 <strong>-{currentCrypto?.fee} {selectedCrypto}</strong>
               </div>
               <div className="summary-row total">
-                <span>You Will Receive:</span>
+                <span>{t('withdrawal.youWillReceive')}:</span>
                 <strong className="receive-amount">
                   {receiveAmount} {selectedCrypto}
                 </strong>
@@ -235,7 +235,7 @@ const Withdrawal = () => {
             </div>
 
             <div className="warning-box">
-              <strong>⚠️ Important:</strong> Please double-check your withdrawal address. Funds sent to the wrong address cannot be recovered. Withdrawals are processed within 24-48 hours.
+              <strong>⚠️ {t('withdrawal.important')}:</strong> {t('withdrawal.warning')}
             </div>
 
             <button type="submit" className="withdraw-btn">
@@ -245,30 +245,30 @@ const Withdrawal = () => {
         </div>
 
         <div className="withdrawal-info">
-          <h3>Withdrawal Information</h3>
+          <h3>{t('withdrawal.withdrawalInformation')}</h3>
           
           <div className="info-section">
-            <h4>Processing Time</h4>
-            <p>Withdrawals are typically processed within 24-48 hours. You will receive an email notification once your withdrawal has been processed.</p>
+            <h4>{t('withdrawal.processingTime')}</h4>
+            <p>{t('withdrawal.processingTimeDescription')}</p>
           </div>
 
           <div className="info-section">
-            <h4>Minimum Withdrawal</h4>
+            <h4>{t('withdrawal.minimumWithdrawal')}</h4>
             <ul>
-              <li>USDT: 10 USDT</li>
-              <li>BTC: 0.001 BTC</li>
-              <li>ETH: 0.01 ETH</li>
-              <li>BNB: 0.1 BNB</li>
+              <li>{t('withdrawal.minUSDT')}</li>
+              <li>{t('withdrawal.minBTC')}</li>
+              <li>{t('withdrawal.minETH')}</li>
+              <li>{t('withdrawal.minBNB')}</li>
             </ul>
           </div>
 
           <div className="info-section">
-            <h4>Important Notes</h4>
+            <h4>{t('withdrawal.importantNotes')}</h4>
             <ul>
-              <li>Ensure the withdrawal address matches the selected network</li>
-              <li>Network fees are deducted from your withdrawal amount</li>
-              <li>Withdrawals cannot be cancelled once submitted</li>
-              <li>Contact support if you need assistance</li>
+              <li>{t('withdrawal.note1')}</li>
+              <li>{t('withdrawal.note2')}</li>
+              <li>{t('withdrawal.note3')}</li>
+              <li>{t('withdrawal.note4')}</li>
             </ul>
           </div>
         </div>
