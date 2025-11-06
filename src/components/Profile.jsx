@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useAccount } from 'wagmi'
+import { useTranslation } from 'react-i18next'
 import './Profile.css'
 
 const Profile = () => {
   const { walletAddress } = useAuth()
   const { isConnected } = useAccount()
+  const { t } = useTranslation()
   const [profileData, setProfileData] = useState({
     name: 'John Doe',
     email: 'john@example.com',
@@ -29,8 +31,8 @@ const Profile = () => {
     return (
       <div className="profile-page">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to view your profile</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -39,7 +41,7 @@ const Profile = () => {
   return (
     <div className="profile-page">
       <div className="page-header">
-        <h1>My Profile</h1>
+        <h1>{t('nav.profile')}</h1>
         <p>Manage your account settings and preferences</p>
       </div>
 

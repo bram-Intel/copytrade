@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
+import { useTranslation } from 'react-i18next'
 import './Withdrawal.css'
 import { createWithdrawal, getUser, getUserPortfolio } from '../services/firebaseService'
 
 const Withdrawal = () => {
   const { address, isConnected } = useAccount()
+  const { t } = useTranslation()
   const [selectedCrypto, setSelectedCrypto] = useState('USDT')
   const [amount, setAmount] = useState('')
   const [network, setNetwork] = useState('ERC20')
@@ -58,7 +60,7 @@ const Withdrawal = () => {
     e.preventDefault()
     
     if (!withdrawalAddress) {
-      alert('Please enter a withdrawal address')
+      alert(t('withdrawal.invalidAddress'))
       return
     }
     
@@ -68,7 +70,7 @@ const Withdrawal = () => {
     }
     
     if (parseFloat(amount) > maxAmount) {
-      alert('Insufficient balance')
+      alert(t('withdrawal.insufficientBalance'))
       return
     }
     
@@ -86,13 +88,13 @@ const Withdrawal = () => {
         paydetails: withdrawalAddress
       })
       
-      alert(`Withdrawal request submitted! Your ${amount} ${selectedCrypto} withdrawal is pending admin approval.`)
+      alert(t('withdrawal.withdrawalSuccess', { amount, crypto: selectedCrypto }))
       setAmount('')
       setWithdrawalAddress('')
       loadUserData() // Reload data
     } catch (error) {
       console.error('Error creating withdrawal:', error)
-      alert('Failed to create withdrawal request. Please try again.')
+      alert(t('withdrawal.withdrawalError'))
     }
   }
 
@@ -100,8 +102,8 @@ const Withdrawal = () => {
     return (
       <div className="withdrawal-page">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to make a withdrawal</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -110,14 +112,14 @@ const Withdrawal = () => {
   return (
     <div className="withdrawal-page">
       <div className="page-header">
-        <h1>Withdraw Funds</h1>
+        <h1>{t('withdrawal.title')}</h1>
         <p>Withdraw your earnings to your personal wallet</p>
       </div>
 
       <div className="withdrawal-container">
         <div className="withdrawal-card">
           <div className="balance-overview">
-            <h3>Available Balance</h3>
+            <h3>{t('withdrawal.availableBalance')}</h3>
             <div className="balance-grid">
               {portfolio.map(asset => (
                 <div key={asset.asset} className="balance-item">
@@ -130,7 +132,7 @@ const Withdrawal = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="form-section">
-              <h3>Select Cryptocurrency</h3>
+              <h3>{t('withdrawal.selectCrypto')}</h3>
               <div className="crypto-grid">
                 {cryptoOptions.map(crypto => {
                   const asset = portfolio.find(a => a.asset === crypto.symbol)
@@ -156,7 +158,7 @@ const Withdrawal = () => {
             </div>
 
             <div className="form-section">
-              <h3>Select Network</h3>
+              <h3>{t('withdrawal.selectNetwork')}</h3>
               <div className="network-grid">
                 {currentCrypto?.networks.map(net => (
                   <button
@@ -175,19 +177,19 @@ const Withdrawal = () => {
             </div>
 
             <div className="form-section">
-              <h3>Withdrawal Address</h3>
+              <h3>{t('withdrawal.withdrawalAddress')}</h3>
               <input
                 type="text"
                 className="address-input"
                 value={withdrawalAddress}
                 onChange={(e) => setWithdrawalAddress(e.target.value)}
-                placeholder={`Enter ${selectedCrypto} address (${network})`}
+                placeholder={t('withdrawal.enterAddress', { crypto: selectedCrypto })}
                 required
               />
             </div>
 
             <div className="form-section">
-              <h3>Withdrawal Amount</h3>
+              <h3>{t('withdrawal.enterAmount')}</h3>
               <div className="amount-input-group">
                 <input
                   type="number"
@@ -207,7 +209,7 @@ const Withdrawal = () => {
                   className="max-btn"
                   onClick={handleMaxClick}
                 >
-                  Max
+                  {t('withdrawal.max')}
                 </button>
                 <span className="available-text">
                   Available: {maxAmount.toLocaleString(undefined, {maximumFractionDigits: 8})} {selectedCrypto}
@@ -237,7 +239,7 @@ const Withdrawal = () => {
             </div>
 
             <button type="submit" className="withdraw-btn">
-              Submit Withdrawal Request
+              {t('withdrawal.confirmWithdrawal')}
             </button>
           </form>
         </div>

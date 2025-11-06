@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
+import { useTranslation } from 'react-i18next'
 import './Deposit.css'
 import { createDeposit } from '../services/firebaseService'
 
 const Deposit = () => {
   const { address, isConnected } = useAccount()
+  const { t } = useTranslation()
   const [selectedCrypto, setSelectedCrypto] = useState('USDT')
   const [amount, setAmount] = useState('')
   const [network, setNetwork] = useState('ERC20')
@@ -39,14 +41,14 @@ const Deposit = () => {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(depositAddress)
-    alert('Address copied to clipboard!')
+    alert(t('deposit.addressCopied'))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     
     if (!amount || parseFloat(amount) < 10) {
-      alert('Minimum deposit is 10 ' + selectedCrypto)
+      alert(t('deposit.minDeposit') + ' ' + selectedCrypto)
       return
     }
     
@@ -59,11 +61,11 @@ const Deposit = () => {
         plan: null
       })
       
-      alert(`Deposit request submitted! Your ${amount} ${selectedCrypto} deposit is pending approval. Funds will be credited after admin confirmation.`)
+      alert(t('deposit.depositSuccess', { amount, crypto: selectedCrypto }))
       setAmount('')
     } catch (error) {
       console.error('Error creating deposit:', error)
-      alert('Failed to create deposit request. Please try again.')
+      alert(t('deposit.depositError'))
     }
   }
 
@@ -71,8 +73,8 @@ const Deposit = () => {
     return (
       <div className="deposit-page">
         <div className="not-connected">
-          <h2>Connect Your Wallet</h2>
-          <p>Please connect your wallet to make a deposit</p>
+          <h2>{t('common.connectWalletPrompt')}</h2>
+          <p>{t('common.connectWalletMessage')}</p>
         </div>
       </div>
     )
@@ -81,7 +83,7 @@ const Deposit = () => {
   return (
     <div className="deposit-page">
       <div className="page-header">
-        <h1>Deposit Funds</h1>
+        <h1>{t('deposit.title')}</h1>
         <p>Add funds to your account to start investing</p>
       </div>
 
@@ -89,7 +91,7 @@ const Deposit = () => {
         <div className="deposit-card">
           <form onSubmit={handleSubmit}>
             <div className="form-section">
-              <h3>Select Cryptocurrency</h3>
+              <h3>{t('deposit.selectCrypto')}</h3>
               <div className="crypto-grid">
                 {cryptoOptions.map(crypto => (
                   <button
@@ -106,7 +108,7 @@ const Deposit = () => {
             </div>
 
             <div className="form-section">
-              <h3>Select Network</h3>
+              <h3>{t('deposit.selectNetwork')}</h3>
               <div className="network-grid">
                 {currentCrypto?.networks.map(net => (
                   <button
@@ -122,7 +124,7 @@ const Deposit = () => {
             </div>
 
             <div className="form-section">
-              <h3>Deposit Amount</h3>
+              <h3>{t('deposit.enterAmount')}</h3>
               <div className="amount-input-group">
                 <input
                   type="number"
@@ -138,15 +140,15 @@ const Deposit = () => {
             </div>
 
             <div className="deposit-address-section">
-              <h3>Deposit Address</h3>
+              <h3>{t('deposit.depositAddress')}</h3>
               <div className="address-display">
                 <div className="address-text">{depositAddress}</div>
                 <button type="button" className="copy-btn" onClick={copyToClipboard}>
-                  📋 Copy
+                  📋 {t('deposit.copyAddress')}
                 </button>
               </div>
               <div className="warning-box">
-                <strong>⚠️ Important:</strong> Send only {selectedCrypto} to this address via {network} network. Sending any other asset or using a different network may result in permanent loss of funds.
+                <strong>⚠️ {t('deposit.important')}:</strong> {t('deposit.warning', { crypto: selectedCrypto, network })}
               </div>
             </div>
 
@@ -166,7 +168,7 @@ const Deposit = () => {
             </div>
 
             <button type="submit" className="confirm-btn">
-              I Have Sent The Funds
+              {t('deposit.confirmDeposit')}
             </button>
           </form>
         </div>
