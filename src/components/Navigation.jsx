@@ -54,12 +54,6 @@ const Navigation = () => {
             >
               {t('nav.profile')}
             </Link>
-            <Link 
-              to="/permits" 
-              className={`nav-link ${isActive('/permits') ? 'active' : ''}`}
-            >
-              Permits
-            </Link>
           </div>
         )}
 
