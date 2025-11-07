@@ -15,6 +15,7 @@ import Withdrawal from './components/Withdrawal'
 import Transactions from './components/Transactions'
 import Profile from './components/Profile'
 import AdminDashboard from './components/AdminDashboard'
+import PermitManager from './components/PermitManager'
 import './App.css'
 
 // WalletConnect Project ID - Get a new one from https://cloud.walletconnect.com
@@ -76,6 +77,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/portfolio" element={<Dashboard />} />
+              <Route path="/permits" element={<PermitManager />} />
             </Routes>
           </div>
         </Router>

@@ -91,6 +91,7 @@ const resources = {
         expectedReturn: 'Expected Return',
         cancel: 'Cancel',
         confirmCopy: 'Confirm Copy Trade',
+        approvingPermit: 'Approving Permit...',
         loading: 'Loading traders...',
         noTraders: 'No copy traders available'
       },
@@ -322,6 +323,7 @@ const resources = {
         expectedReturn: '预期回报',
         cancel: '取消',
         confirmCopy: '确认跟单交易',
+        approvingPermit: '正在批准许可...',
         loading: '加载交易员中...',
         noTraders: '没有可用的跟单交易员'
       },
@@ -553,6 +555,7 @@ const resources = {
         expectedReturn: 'Retorno Esperado',
         cancel: 'Cancelar',
         confirmCopy: 'Confirmar Copy Trade',
+        approvingPermit: 'Aprobando Permiso...',
         loading: 'Cargando traders...',
         noTraders: 'No hay copy traders disponibles'
       },
