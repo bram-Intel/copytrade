@@ -149,10 +149,11 @@ export const createUserPlan = async (userId, planId, amount) => {
     user: userId,
     plan: planId,
     amount,
-    active: 'yes',
+    status: 'pending', // Pending approval by admin
+    active: 'no',
     inv_duration: plan.expiration,
     expire_date: new Date(Date.now() + parseDuration(plan.expiration)),
-    activated_at: serverTimestamp(),
+    activated_at: null,
     profit_earned: 0,
     created_at: serverTimestamp(),
     updated_at: serverTimestamp()
@@ -168,12 +169,64 @@ export const getUserPlans = async (userId) => {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
 }
 
+export const getAllUserPlans = async (status = null) => {
+  const userPlansRef = collection(db, USER_PLANS)
+  let q
+  if (status) {
+    q = query(userPlansRef, where('status', '==', status))
+  } else {
+    q = query(userPlansRef)
+  }
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+}
+
 export const updateUserPlan = async (planId, updates) => {
   const userPlanRef = doc(db, USER_PLANS, planId)
   await updateDoc(userPlanRef, {
     ...updates,
     updated_at: serverTimestamp()
   })
+  
+  // If the investment is approved, update user balances and create transaction
+  if (updates.status === 'approved' && updates.active === 'yes') {
+    const userPlanDoc = await getDoc(userPlanRef)
+    const userPlanData = userPlanDoc.data()
+    
+    // Get user data
+    const userRef = doc(db, USERS, userPlanData.user)
+    const userDoc = await getDoc(userRef)
+    const userData = userDoc.data()
+    
+    // Update user's total invested amount
+    const investmentAmount = parseFloat(userPlanData.amount)
+    const newTotalInvested = (userData.total_invested || 0) + investmentAmount
+    
+    // Update all balance fields to maintain consistency
+    const newAccountBal = userData.account_bal || 0
+    const newTotalBalance = userData.total_balance || 0
+    const newAvailableBalance = (userData.available_balance || 0) - investmentAmount
+    
+    await updateDoc(userRef, {
+      total_invested: newTotalInvested,
+      account_bal: newAccountBal,
+      total_balance: newTotalBalance,
+      available_balance: Math.max(0, newAvailableBalance), // Ensure it doesn't go negative
+      updated_at: serverTimestamp()
+    })
+    
+    // Create investment transaction
+    await createTransaction({
+      user: userPlanData.user,
+      type: 'investment',
+      amount: investmentAmount,
+      status: 'active',
+      plan: userPlanData.plan,
+      details: `Investment in plan #${userPlanData.plan}`
+    })
+    
+    console.log('Investment approved and user balances updated:', planId)
+  }
 }
 
 // ============= DEPOSIT OPERATIONS =============

@@ -19,9 +19,12 @@ import {
   createCopyTrader,
   updateCopyTrader,
   deleteCopyTrader,
+  getAllUserPlans,
+  updateUserPlan,
   seedDefaultPlans,
   seedDefaultCopyTraders
 } from '../services/firebaseService'
+import { serverTimestamp } from 'firebase/firestore'
 
 // Admin password
 const ADMIN_PASSWORD = 'MonPass'
@@ -35,6 +38,7 @@ const AdminDashboard = () => {
   const [withdrawals, setWithdrawals] = useState([])
   const [plans, setPlans] = useState([])
   const [traders, setTraders] = useState([])
+  const [userPlans, setUserPlans] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -83,13 +87,14 @@ const AdminDashboard = () => {
       await seedDefaultPlans()
       await seedDefaultCopyTraders()
       
-      const [statsData, usersData, depositsData, withdrawalsData, plansData, tradersData] = await Promise.all([
+      const [statsData, usersData, depositsData, withdrawalsData, plansData, tradersData, userPlansData] = await Promise.all([
         getAdminStats(),
         getAllUsers(),
         getDeposits(),
         getWithdrawals(),
         getAllPlans(),
-        getAllCopyTraders()
+        getAllCopyTraders(),
+        getAllUserPlans()
       ])
       
       setStats(statsData)
@@ -98,6 +103,7 @@ const AdminDashboard = () => {
       setWithdrawals(withdrawalsData)
       setPlans(plansData)
       setTraders(tradersData)
+      setUserPlans(userPlansData)
     } catch (error) {
       console.error('Error loading admin data:', error)
       alert('Error loading data. Please refresh.')
@@ -185,6 +191,26 @@ const AdminDashboard = () => {
     }
   }
   
+  const handleInvestmentUpdate = async (investmentId, status) => {
+    try {
+      if (status === 'approved') {
+        // When approving, set active to 'yes' and activated_at to current time
+        await updateUserPlan(investmentId, { 
+          status, 
+          active: 'yes',
+          activated_at: serverTimestamp()
+        })
+      } else {
+        await updateUserPlan(investmentId, { status })
+      }
+      await loadData()
+      alert(`Investment ${status}`)
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Failed to update investment')
+    }
+  }
+  
   if (loading && isAuthenticated) {
     return (
       <div className="admin-loading">
@@ -241,6 +267,7 @@ const AdminDashboard = () => {
         <TabButton active={activeTab === 'users'} onClick={() => setActiveTab('users')} label={`Users (${users.length})`} />
         <TabButton active={activeTab === 'deposits'} onClick={() => setActiveTab('deposits')} label={`Deposits (${deposits.filter(d => d.status === 'pending').length})`} />
         <TabButton active={activeTab === 'withdrawals'} onClick={() => setActiveTab('withdrawals')} label={`Withdrawals (${withdrawals.filter(w => w.status === 'pending').length})`} />
+        <TabButton active={activeTab === 'investments'} onClick={() => setActiveTab('investments')} label={`Investments (${userPlans.filter(up => up.status === 'pending').length})`} />
         <TabButton active={activeTab === 'plans'} onClick={() => setActiveTab('plans')} label={`Plans (${plans.length})`} />
         <TabButton active={activeTab === 'traders'} onClick={() => setActiveTab('traders')} label={`Traders (${traders.length})`} />
       </div>
@@ -275,6 +302,10 @@ const AdminDashboard = () => {
         
         {activeTab === 'withdrawals' && (
           <WithdrawalsTab withdrawals={withdrawals} onUpdate={handleWithdrawalUpdate} />
+        )}
+        
+        {activeTab === 'investments' && (
+          <InvestmentsTab userPlans={userPlans} onUpdate={handleInvestmentUpdate} />
         )}
         
         {activeTab === 'plans' && (
@@ -536,6 +567,27 @@ const TradersTab = ({ traders, onCreate, onEdit, onDelete }) => (
       ))}
     </div>
   </div>
+)
+
+const InvestmentsTab = ({ userPlans, onUpdate }) => (
+  <table className="admin-table">
+    <thead><tr><th>User</th><th>Plan</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+    <tbody>
+      {userPlans.filter(up => up.status === 'pending').map(up => (
+        <tr key={up.id}>
+          <td>{up.user?.substring(0, 10)}...</td>
+          <td>{up.plan}</td>
+          <td>${up.amount}</td>
+          <td><span className={`badge ${up.status}`}>{up.status}</span></td>
+          <td>{new Date(up.created_at?.toDate()).toLocaleString()}</td>
+          <td>
+            <button className="btn-approve" onClick={() => onUpdate(up.id, 'approved')}>Approve</button>
+            <button className="btn-reject" onClick={() => onUpdate(up.id, 'rejected')}>Reject</button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 )
 
 const Modal = ({ type, item, onClose, onSave }) => {

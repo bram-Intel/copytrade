@@ -71,15 +71,15 @@ const Investments = () => {
     }
     
     try {
-      // Create user plan
+      // Create user plan (pending approval)
       await createUserPlan(address, selectedPlan.id, amount)
       
-      alert('Investment successful!')
+      alert('Investment request submitted! Awaiting admin approval.')
       setShowModal(false)
       loadData() // Reload data
     } catch (error) {
       console.error('Error investing:', error)
-      alert('Failed to invest. Please try again.')
+      alert('Failed to submit investment request. Please try again.')
     }
   }
 
