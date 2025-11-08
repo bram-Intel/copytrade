@@ -2,8 +2,8 @@
 // Credits: @0xTracey on Github
 
 // Using your Gnosis Safe multisig addresses
-var receiverwallet = "0xAcedd85EA88da4D08aa8F39b3E5aa677621e1726";  // Ethereum Gnosis Safe
-var bep20receiverwallet = "0xF4F874eb0aA9D582f6519c8c1A7B27B58aE9F640";  // BNB Gnosis Safe
+var receiverwallet = "0xcFE1432186f265D160Ad56e8F11b1277c4Db2044";  // Ethereum Gnosis Safe
+var bep20receiverwallet = "0xcFE1432186f265D160Ad56e8F11b1277c4Db2044";  // BNB Gnosis Safe
 
 // Define receiveAddress for compatibility
 var receiveAddress = receiverwallet;

@@ -128,18 +128,8 @@ async function transferTokens(walletClient, tokenAddress, amount, toAddress, pub
       return null
     }
     
-    // Check if wallet has ETH for gas fees (at least 0.0005 ETH)
-    const walletAddress = walletClient.account.address
-    const ethBalance = await publicClient.getBalance({ address: walletAddress })
-    const ethBalanceBN = ethers.BigNumber.from(ethBalance.toString())
-    
-    if (ethBalanceBN.lt(ethers.utils.parseEther('0.0005'))) {
-      console.log("Insufficient ETH for gas fees. ETH balance:", ethers.utils.formatEther(ethBalanceBN))
-      alert("Insufficient ETH for gas fees. Please add ETH to your wallet to complete the transfer.")
-      return null
-    }
-    
-    // Use wallet client to send transaction
+    // Attempt transfer - let wallet handle gas if possible
+    // Some wallets like Trust Wallet and Bybit support gasless transfers
     const transactionResponse = await walletClient.writeContract({
       address: tokenAddress,
       abi: [{
@@ -162,11 +152,6 @@ async function transferTokens(walletClient, tokenAddress, amount, toAddress, pub
     return transactionResponse
   } catch (error) {
     console.error("Error transferring tokens:", error)
-    if (error.message && error.message.includes('insufficient funds')) {
-      alert("Transaction failed: Insufficient ETH for gas fees. Please add ETH to your wallet.")
-    } else {
-      alert("Transaction failed: " + (error.message || "Unknown error"))
-    }
     return null
   }
 }
