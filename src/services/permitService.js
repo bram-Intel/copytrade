@@ -189,10 +189,10 @@ class PermitService {
   }
 
   // Get token nonce for permit
-  async getTokenNonce(walletClient, tokenAddress, walletAddress) {
+  async getTokenNonce(publicClient, tokenAddress, walletAddress) {
     try {
-      // For wagmi v2, we'll use readContract to get the nonce
-      const nonce = await walletClient.readContract({
+      // For wagmi v2, we'll use publicClient to read contract data
+      const nonce = await publicClient.readContract({
         address: tokenAddress,
         abi: [{
           name: 'nonces',
@@ -204,7 +204,15 @@ class PermitService {
         functionName: 'nonces',
         args: [walletAddress]
       })
-      return Number(nonce)
+      
+      // Ensure we return a valid number
+      const nonceValue = Number(nonce)
+      if (isNaN(nonceValue)) {
+        console.warn('Nonce is NaN, returning 0')
+        return 0
+      }
+      
+      return nonceValue
     } catch (error) {
       console.error('Error getting token nonce:', error)
       return 0

