@@ -141,7 +141,11 @@ const CopyTrading = () => {
             <div key={trader.id} className="trader-card">
               <div className="trader-header">
                 <div className="trader-avatar">
-                  {trader.avatar || trader.name?.substring(0, 2) || '??'}
+                  {trader.imageUrl ? (
+                    <img src={trader.imageUrl} alt={trader.name} className="trader-image" />
+                  ) : (
+                    trader.avatar || trader.name?.substring(0, 2) || '??'
+                  )}
                 </div>
                 <div className="trader-info">
                   <h3>{trader.name}</h3>

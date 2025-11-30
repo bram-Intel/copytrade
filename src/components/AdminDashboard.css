@@ -390,19 +390,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
   font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
+  font-weight: bold;
+  overflow: hidden;
   margin: 0 auto 1rem;
 }
 
-.trader-card h3 {
-  font-size: 1.25rem;
-}
 
-.trader-card strong {
-  color: rgba(255, 255, 255, 0.9);
-}
 
 .plan-card p, .trader-card p {
   color: rgba(255, 255, 255, 0.7);

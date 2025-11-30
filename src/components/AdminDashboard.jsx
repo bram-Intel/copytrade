@@ -551,7 +551,13 @@ const TradersTab = ({ traders, onCreate, onEdit, onDelete }) => (
     <div className="traders-grid">
       {traders.map(t => (
         <div key={t.id} className="trader-card">
-          <div className="trader-avatar">{t.avatar || t.name?.substring(0, 2)}</div>
+          <div className="trader-avatar">
+            {t.imageUrl ? (
+              <img src={t.imageUrl} alt={t.name} className="trader-image" />
+            ) : (
+              t.avatar || t.name?.substring(0, 2) || '??'
+            )}
+          </div>
           <h3>{t.name}</h3>
           <p><strong>Expertise:</strong> {t.expertise}</p>
           <p><strong>Win Rate:</strong> {t.win_rate}%</p>
@@ -667,7 +673,17 @@ const Modal = ({ type, item, onClose, onSave }) => {
               <input type="number" step="0.01" placeholder="Total ROI %" value={formData.total_roi || ''} onChange={e => setFormData({...formData, total_roi: e.target.value})} required />
               <input type="number" placeholder="Followers" value={formData.followers || ''} onChange={e => setFormData({...formData, followers: e.target.value})} required />
               <input type="number" placeholder="Min Copy Amount" value={formData.min_copy_amount || ''} onChange={e => setFormData({...formData, min_copy_amount: e.target.value})} required />
-              <input type="text" placeholder="Avatar (e.g., JD)" value={formData.avatar || ''} onChange={e => setFormData({...formData, avatar: e.target.value})} />
+              
+              {/* Image URL input for trader */}
+              <label>Trader Image URL</label>
+              <input 
+                type="text" 
+                placeholder="https://example.com/image.jpg" 
+                value={formData.imageUrl || ''} 
+                onChange={e => setFormData({...formData, imageUrl: e.target.value})} 
+              />
+              
+              <input type="text" placeholder="Avatar Initials (fallback)" value={formData.avatar || ''} onChange={e => setFormData({...formData, avatar: e.target.value})} />
               <select value={formData.status || 'active'} onChange={e => setFormData({...formData, status: e.target.value})}>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
