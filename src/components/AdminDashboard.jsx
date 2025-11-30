@@ -604,6 +604,7 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
   const [formData, setFormData] = useState(item || {})
   const [imageFile, setImageFile] = useState(null)
   const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
   
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -612,19 +613,29 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
     if (type.includes('trader') && imageFile) {
       try {
         setUploading(true)
+        setUploadProgress(0)
+        
+        // Upload the image and get the URL
         const imageUrl = await uploadTraderImage(imageFile, item?.id || 'new')
         formData.imageUrl = imageUrl
+        
+        console.log('Image uploaded successfully:', imageUrl)
       } catch (error) {
         console.error('Error uploading image:', error)
-        alert('Failed to upload image. Please try again.')
+        alert(`Failed to upload image: ${error.message || 'Unknown error'}`)
         setUploading(false)
         return
-      } finally {
-        setUploading(false)
       }
     }
     
-    onSave(formData)
+    try {
+      await onSave(formData)
+      setUploading(false)
+    } catch (error) {
+      console.error('Error saving trader:', error)
+      alert(`Failed to save trader: ${error.message || 'Unknown error'}`)
+      setUploading(false)
+    }
   }
   
   return (
@@ -703,11 +714,32 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
                 type="file" 
                 accept="image/*" 
                 onChange={(e) => setImageFile(e.target.files[0])} 
+                disabled={uploading}
               />
-              {formData.imageUrl && (
-                <div>
+              {uploading && (
+                <div style={{marginTop: '10px'}}>
+                  <div>Uploading image...</div>
+                  <div style={{fontSize: '12px', color: '#667eea'}}>{uploadProgress > 0 ? `${uploadProgress}%` : 'Preparing upload...'}</div>
+                </div>
+              )}
+              {formData.imageUrl && !uploading && (
+                <div style={{marginTop: '10px'}}>
                   <small>Current image:</small>
-                  <img src={formData.imageUrl} alt="Current" style={{width: '50px', height: '50px', borderRadius: '50%', marginLeft: '10px'}} />
+                  <div style={{display: 'flex', alignItems: 'center', marginTop: '5px'}}>
+                    <img src={formData.imageUrl} alt="Current" style={{width: '50px', height: '50px', borderRadius: '50%', marginRight: '10px'}} />
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        setFormData({...formData, imageUrl: null})
+                        // Also clear the file input
+                        const fileInput = document.querySelector('input[type="file"]')
+                        if (fileInput) fileInput.value = ''
+                      }}
+                      style={{background: 'none', border: '1px solid #ff6b6b', color: '#ff6b6b', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer'}}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               )}
               
@@ -724,7 +756,7 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
           )}
           
           <div className="modal-actions">
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="button" onClick={onClose} disabled={uploading}>Cancel</button>
             <button type="submit" disabled={uploading}>
               {uploading ? 'Uploading...' : 'Save'}
             </button>

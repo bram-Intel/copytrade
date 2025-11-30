@@ -107,6 +107,22 @@ export const deleteUser = async (walletAddress) => {
 // ============= IMAGE UPLOAD OPERATIONS =============
 export const uploadTraderImage = async (file, traderId) => {
   try {
+    // Validate file
+    if (!file) {
+      throw new Error('No file provided')
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('File size too large. Maximum size is 5MB')
+    }
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image')
+    }
+    
     // Create a reference to the file location in Firebase Storage
     const imageRef = ref(storage, `traders/${traderId}/${Date.now()}_${file.name}`)
     
@@ -119,7 +135,7 @@ export const uploadTraderImage = async (file, traderId) => {
     return downloadURL
   } catch (error) {
     console.error('Error uploading image:', error)
-    throw error
+    throw new Error(`Image upload failed: ${error.message || 'Unknown error'}`)
   }
 }
 
