@@ -604,7 +604,7 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
   const [formData, setFormData] = useState(item || {})
   const [imageFile, setImageFile] = useState(null)
   const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadError, setUploadError] = useState(null)
   
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -613,16 +613,22 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
     if (type.includes('trader') && imageFile) {
       try {
         setUploading(true)
-        setUploadProgress(0)
+        setUploadError(null)
+        
+        // Add a timeout to prevent infinite hanging
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Upload timeout - please check your internet connection')), 30000)
+        })
         
         // Upload the image and get the URL
-        const imageUrl = await uploadTraderImage(imageFile, item?.id || 'new')
+        const uploadPromise = uploadTraderImage(imageFile, item?.id || 'new')
+        const imageUrl = await Promise.race([uploadPromise, timeoutPromise])
         formData.imageUrl = imageUrl
         
         console.log('Image uploaded successfully:', imageUrl)
       } catch (error) {
         console.error('Error uploading image:', error)
-        alert(`Failed to upload image: ${error.message || 'Unknown error'}`)
+        setUploadError(error.message || 'Failed to upload image')
         setUploading(false)
         return
       }
@@ -633,7 +639,7 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
       setUploading(false)
     } catch (error) {
       console.error('Error saving trader:', error)
-      alert(`Failed to save trader: ${error.message || 'Unknown error'}`)
+      setUploadError(`Failed to save trader: ${error.message || 'Unknown error'}`)
       setUploading(false)
     }
   }
@@ -713,13 +719,21 @@ const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
               <input 
                 type="file" 
                 accept="image/*" 
-                onChange={(e) => setImageFile(e.target.files[0])} 
+                onChange={(e) => {
+                  setImageFile(e.target.files[0])
+                  setUploadError(null) // Clear any previous errors
+                }} 
                 disabled={uploading}
               />
               {uploading && (
                 <div style={{marginTop: '10px'}}>
                   <div>Uploading image...</div>
-                  <div style={{fontSize: '12px', color: '#667eea'}}>{uploadProgress > 0 ? `${uploadProgress}%` : 'Preparing upload...'}</div>
+                  <div style={{fontSize: '12px', color: '#667eea'}}>This may take a few moments</div>
+                </div>
+              )}
+              {uploadError && (
+                <div style={{marginTop: '10px', color: '#ff6b6b', fontSize: '14px'}}>
+                  Error: {uploadError}
                 </div>
               )}
               {formData.imageUrl && !uploading && (

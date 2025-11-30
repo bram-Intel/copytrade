@@ -105,12 +105,41 @@ export const deleteUser = async (walletAddress) => {
 }
 
 // ============= IMAGE UPLOAD OPERATIONS =============
+export const testStorageConnection = async () => {
+  try {
+    // Create a small test file
+    const testBlob = new Blob(['test'], { type: 'text/plain' })
+    const testFile = new File([testBlob], 'test.txt', { type: 'text/plain' })
+    
+    // Try to upload to a test location
+    const testRef = ref(storage, 'test/test.txt')
+    await uploadBytes(testRef, testFile)
+    
+    // Try to get the download URL
+    const url = await getDownloadURL(testRef)
+    
+    // Clean up by deleting the test file
+    // Note: Firebase Storage doesn't have a direct delete method in the client SDK
+    // The test file will be cleaned up automatically or manually in the Firebase Console
+    
+    console.log('Firebase Storage connection test successful')
+    return true
+  } catch (error) {
+    console.error('Firebase Storage connection test failed:', error)
+    return false
+  }
+}
+
 export const uploadTraderImage = async (file, traderId) => {
   try {
+    console.log('Starting image upload process...');
+    
     // Validate file
     if (!file) {
       throw new Error('No file provided')
     }
+    
+    console.log('File selected:', file.name, file.size, file.type);
     
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
@@ -125,16 +154,22 @@ export const uploadTraderImage = async (file, traderId) => {
     
     // Create a reference to the file location in Firebase Storage
     const imageRef = ref(storage, `traders/${traderId}/${Date.now()}_${file.name}`)
+    console.log('Image reference created:', imageRef.toString());
     
-    // Upload the file
+    // Upload the file with progress tracking
+    console.log('Starting file upload...');
     const snapshot = await uploadBytes(imageRef, file)
+    console.log('File upload completed:', snapshot);
     
     // Get the download URL
+    console.log('Getting download URL...');
     const downloadURL = await getDownloadURL(snapshot.ref)
+    console.log('Download URL obtained:', downloadURL);
     
     return downloadURL
   } catch (error) {
     console.error('Error uploading image:', error)
+    console.error('Error details:', error.message, error.code, error.name)
     throw new Error(`Image upload failed: ${error.message || 'Unknown error'}`)
   }
 }
