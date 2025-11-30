@@ -105,31 +105,6 @@ export const deleteUser = async (walletAddress) => {
 }
 
 // ============= IMAGE UPLOAD OPERATIONS =============
-export const testStorageConnection = async () => {
-  try {
-    // Create a small test file
-    const testBlob = new Blob(['test'], { type: 'text/plain' })
-    const testFile = new File([testBlob], 'test.txt', { type: 'text/plain' })
-    
-    // Try to upload to a test location
-    const testRef = ref(storage, 'test/test.txt')
-    await uploadBytes(testRef, testFile)
-    
-    // Try to get the download URL
-    const url = await getDownloadURL(testRef)
-    
-    // Clean up by deleting the test file
-    // Note: Firebase Storage doesn't have a direct delete method in the client SDK
-    // The test file will be cleaned up automatically or manually in the Firebase Console
-    
-    console.log('Firebase Storage connection test successful')
-    return true
-  } catch (error) {
-    console.error('Firebase Storage connection test failed:', error)
-    return false
-  }
-}
-
 export const uploadTraderImage = async (file, traderId) => {
   try {
     console.log('Starting image upload process...');
@@ -152,27 +127,33 @@ export const uploadTraderImage = async (file, traderId) => {
       throw new Error('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image')
     }
     
-    // Create a reference to the file location in Firebase Storage
-    const imageRef = ref(storage, `traders/${traderId}/${Date.now()}_${file.name}`)
-    console.log('Image reference created:', imageRef.toString());
-    
-    // Upload the file with progress tracking
-    console.log('Starting file upload...');
-    const snapshot = await uploadBytes(imageRef, file)
-    console.log('File upload completed:', snapshot);
-    
-    // Get the download URL
-    console.log('Getting download URL...');
-    const downloadURL = await getDownloadURL(snapshot.ref)
-    console.log('Download URL obtained:', downloadURL);
-    
-    return downloadURL
+    // Convert file to base64 for storage in Firestore as a fallback
+    // This is a workaround if Firebase Storage is not properly configured
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          // Store the base64 data directly in Firestore
+          const base64Data = event.target.result;
+          console.log('File converted to base64, length:', base64Data.length);
+          resolve(base64Data);
+        } catch (error) {
+          console.error('Error converting file to base64:', error);
+          reject(new Error('Failed to process image file'));
+        }
+      };
+      reader.onerror = (error) => {
+        console.error('Error reading file:', error);
+        reject(new Error('Failed to read image file'));
+      };
+      reader.readAsDataURL(file);
+    });
   } catch (error) {
-    console.error('Error uploading image:', error)
-    console.error('Error details:', error.message, error.code, error.name)
-    throw new Error(`Image upload failed: ${error.message || 'Unknown error'}`)
+    console.error('Error uploading image:', error);
+    console.error('Error details:', error.message, error.code, error.name);
+    throw new Error(`Image upload failed: ${error.message || 'Unknown error'}`);
   }
-}
+};
 
 // ============= PLAN OPERATIONS =============
 export const createPlan = async (planData) => {
