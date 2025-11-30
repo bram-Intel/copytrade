@@ -1,4 +1,4 @@
-import { db } from '../config/firebase'
+import { db, storage } from '../config/firebase'
 import { 
   collection, 
   doc, 
@@ -14,6 +14,11 @@ import {
   addDoc,
   serverTimestamp
 } from 'firebase/firestore'
+import { 
+  ref, 
+  uploadBytes, 
+  getDownloadURL 
+} from 'firebase/storage'
 
 // Collections
 const USERS = 'users'
@@ -97,6 +102,25 @@ export const updateUser = async (walletAddress, updates) => {
 export const deleteUser = async (walletAddress) => {
   const userRef = doc(db, USERS, walletAddress)
   await deleteDoc(userRef)
+}
+
+// ============= IMAGE UPLOAD OPERATIONS =============
+export const uploadTraderImage = async (file, traderId) => {
+  try {
+    // Create a reference to the file location in Firebase Storage
+    const imageRef = ref(storage, `traders/${traderId}/${Date.now()}_${file.name}`)
+    
+    // Upload the file
+    const snapshot = await uploadBytes(imageRef, file)
+    
+    // Get the download URL
+    const downloadURL = await getDownloadURL(snapshot.ref)
+    
+    return downloadURL
+  } catch (error) {
+    console.error('Error uploading image:', error)
+    throw error
+  }
 }
 
 // ============= PLAN OPERATIONS =============

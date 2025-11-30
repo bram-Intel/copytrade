@@ -22,7 +22,8 @@ import {
   getAllUserPlans,
   updateUserPlan,
   seedDefaultPlans,
-  seedDefaultCopyTraders
+  seedDefaultCopyTraders,
+  uploadTraderImage
 } from '../services/firebaseService'
 import { serverTimestamp } from 'firebase/firestore'
 
@@ -213,9 +214,11 @@ const AdminDashboard = () => {
   
   if (loading && isAuthenticated) {
     return (
-      <div className="admin-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading admin panel...</p>
+      <div className="admin-dashboard">
+        <div className="admin-loading">
+          <div className="loading-spinner"></div>
+          <p>Loading admin panel...</p>
+        </div>
       </div>
     )
   }
@@ -356,6 +359,7 @@ const AdminDashboard = () => {
             else if (modalType === 'add-trader') handleTraderAction('create', null, data)
             else if (modalType === 'edit-trader') handleTraderAction('update', selectedItem.id, data)
           }}
+          onLoadData={loadData}
         />
       )}
     </div>
@@ -596,11 +600,30 @@ const InvestmentsTab = ({ userPlans, onUpdate }) => (
   </table>
 )
 
-const Modal = ({ type, item, onClose, onSave }) => {
+const Modal = ({ type, item, onClose, onSave, onLoadData }) => {
   const [formData, setFormData] = useState(item || {})
+  const [imageFile, setImageFile] = useState(null)
+  const [uploading, setUploading] = useState(false)
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    // Handle image upload for traders
+    if (type.includes('trader') && imageFile) {
+      try {
+        setUploading(true)
+        const imageUrl = await uploadTraderImage(imageFile, item?.id || 'new')
+        formData.imageUrl = imageUrl
+      } catch (error) {
+        console.error('Error uploading image:', error)
+        alert('Failed to upload image. Please try again.')
+        setUploading(false)
+        return
+      } finally {
+        setUploading(false)
+      }
+    }
+    
     onSave(formData)
   }
   
@@ -674,14 +697,19 @@ const Modal = ({ type, item, onClose, onSave }) => {
               <input type="number" placeholder="Followers" value={formData.followers || ''} onChange={e => setFormData({...formData, followers: e.target.value})} required />
               <input type="number" placeholder="Min Copy Amount" value={formData.min_copy_amount || ''} onChange={e => setFormData({...formData, min_copy_amount: e.target.value})} required />
               
-              {/* Image URL input for trader */}
-              <label>Trader Image URL</label>
+              {/* File upload for trader image */}
+              <label>Trader Image</label>
               <input 
-                type="text" 
-                placeholder="https://example.com/image.jpg" 
-                value={formData.imageUrl || ''} 
-                onChange={e => setFormData({...formData, imageUrl: e.target.value})} 
+                type="file" 
+                accept="image/*" 
+                onChange={(e) => setImageFile(e.target.files[0])} 
               />
+              {formData.imageUrl && (
+                <div>
+                  <small>Current image:</small>
+                  <img src={formData.imageUrl} alt="Current" style={{width: '50px', height: '50px', borderRadius: '50%', marginLeft: '10px'}} />
+                </div>
+              )}
               
               <input type="text" placeholder="Avatar Initials (fallback)" value={formData.avatar || ''} onChange={e => setFormData({...formData, avatar: e.target.value})} />
               <select value={formData.status || 'active'} onChange={e => setFormData({...formData, status: e.target.value})}>
@@ -697,7 +725,9 @@ const Modal = ({ type, item, onClose, onSave }) => {
           
           <div className="modal-actions">
             <button type="button" onClick={onClose}>Cancel</button>
-            <button type="submit">Save</button>
+            <button type="submit" disabled={uploading}>
+              {uploading ? 'Uploading...' : 'Save'}
+            </button>
           </div>
         </form>
       </div>
